@@ -1,0 +1,35 @@
+{
+  "name": "usf-buan-prerequisite-planner",
+  "version": "1.0.0",
+  "description": "University of San Francisco Business Analytics Course Prerequisite Planner",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next export"
+  },
+  "dependencies": {
+    "next": "14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "html2canvas": "^1.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.0.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "university-of-san-francisco",
+    "business-analytics",
+    "course-planner",
+    "prerequisite-map",
+    "academic-planning"
+  ],
+  "author": "University of San Francisco - McLaren School of Management",
+  "license": "MIT"
+}
