@@ -390,8 +390,8 @@ function getCourseStatus(course, completedCourses, availableCourses) {
   return "blocked";
 }
 
-function getCourseCategory(course, view, minorRequired, majorRequired) {
-  const status = getCourseStatus(course);
+function getCourseCategory(course, view, minorRequired, majorRequired, completedCourses, availableCourses) {
+  const status = getCourseStatus(course, completedCourses, availableCourses);
   if (status === "completed") return "completed";
   if (status === "available") return "available";
   
@@ -1061,7 +1061,7 @@ export default function PrereqPlanner() {
             {visibleCourses.map(course => {
               const pos = getPos(course);
               const status = getCourseStatus(course, completedCourses, availableCourses);
-              const category = getCourseCategory(course, view, minorRequired, majorRequired);
+              const category = getCourseCategory(course, view, minorRequired, majorRequired, completedCourses, availableCourses);
               const col = catColors[status] || catColors[category] || catColors.blocked;
               
               const isA = selected === course.id || hovered === course.id;
