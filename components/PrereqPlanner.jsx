@@ -982,6 +982,7 @@ export default function PrereqPlanner() {
                         cursor: "pointer",
                         transition: "all 0.15s"
                       }}
+                      onClick={(e) => { e.stopPropagation(); setSelected(course.id); }}
                       onMouseEnter={() => setHovered(course.id)}
                       onMouseLeave={() => setHovered(null)}
                     >
@@ -994,112 +995,6 @@ export default function PrereqPlanner() {
                       +{availableCourses.length - 6} more
                     </div>
                   )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Course Details Panel */}
-        {hovered && courseMap[hovered] && (
-          <div style={{
-            marginTop: 16,
-            background: "#fff",
-            borderRadius: 12,
-            padding: "20px",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
-            border: "1px solid #e2e8f0"
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-              <div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>
-                  {courseMap[hovered].name} - {courseMap[hovered].label}
-                </h3>
-                <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
-                  <span style={{
-                    padding: "4px 8px",
-                    borderRadius: 4,
-                    fontSize: 11,
-                    fontWeight: 600,
-                    background: "#3b82f6",
-                    color: "#fff"
-                  }}>
-                    {courseMap[hovered].units} units
-                  </span>
-                  {courseMap[hovered].sem && (
-                    <span style={{
-                      padding: "4px 8px",
-                      borderRadius: 4,
-                      fontSize: 11,
-                      fontWeight: 600,
-                      background: semesterColors[courseMap[hovered].sem],
-                      color: "#fff"
-                    }}>
-                      {courseMap[hovered].sem}
-                    </span>
-                  )}
-                  {courseMap[hovered].enrollLimit && (
-                    <span style={{ fontSize: 12, color: "#dc2626" }}>
-                      ⚠ Enrollment Limited
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <p style={{ fontSize: 14, color: "#374151", lineHeight: 1.6, marginBottom: 16 }}>
-              {courseMap[hovered].description}
-            </p>
-
-            {/* Prerequisites */}
-            {edges.filter(e => e.to === hovered).length > 0 && (
-              <div style={{ marginBottom: 16 }}>
-                <h4 style={{ fontSize: 13, fontWeight: 600, color: "#4b5563", marginBottom: 8 }}>Prerequisites:</h4>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                  {edges.filter(e => e.to === hovered).map(prereq => {
-                    const prereqCourse = courseMap[prereq.from];
-                    if (!prereqCourse) return null;
-                    const isCompleted = completedCourses.has(prereq.from);
-                    return (
-                      <span key={prereq.from} style={{
-                        padding: "4px 8px",
-                        borderRadius: 4,
-                        fontSize: 11,
-                        fontWeight: 500,
-                        background: isCompleted ? "#dcfce7" : "#fee2e2",
-                        color: isCompleted ? "#166534" : "#991b1b",
-                      }}
-                      >
-                        {prereqCourse.name} {prereq.type === "concurrent" ? "(concurrent)" : ""}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Enables */}
-            {edges.filter(e => e.from === hovered).length > 0 && (
-              <div>
-                <h4 style={{ fontSize: 13, fontWeight: 600, color: "#4b5563", marginBottom: 8 }}>Enables:</h4>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                  {edges.filter(e => e.from === hovered).map(enables => {
-                    const enabledCourse = courseMap[enables.to];
-                    if (!enabledCourse || !enabledCourse.programs.includes(view)) return null;
-                    return (
-                      <span key={enables.to} style={{
-                        padding: "4px 8px",
-                        borderRadius: 4,
-                        fontSize: 11,
-                        fontWeight: 500,
-                        background: "#e0f2fe",
-                        color: "#0c4a6e",
-                      }}
-                      >
-                        {enabledCourse.name}
-                      </span>
-                    );
-                  })}
                 </div>
               </div>
             )}
@@ -1236,6 +1131,87 @@ export default function PrereqPlanner() {
             })}
           </svg>
         </div>
+
+        {/* Course Details Panel - shown on hover or click, placed below map to prevent jitter */}
+        {(hovered || selected) && courseMap[hovered || selected] && (() => {
+          const courseId = hovered || selected;
+          const course = courseMap[courseId];
+          return (
+            <div style={{
+              marginTop: 16,
+              background: "#fff",
+              borderRadius: 12,
+              padding: "20px",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
+              border: "1px solid #e2e8f0"
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                <div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>
+                    {course.name} - {course.label}
+                  </h3>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
+                    <span style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "#3b82f6", color: "#fff" }}>
+                      {course.units} units
+                    </span>
+                    {course.sem && (
+                      <span style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: semesterColors[course.sem], color: "#fff" }}>
+                        {course.sem}
+                      </span>
+                    )}
+                    {course.enrollLimit && (
+                      <span style={{ fontSize: 12, color: "#dc2626" }}>⚠ Enrollment Limited</span>
+                    )}
+                  </div>
+                </div>
+                {selected === courseId && (
+                  <button onClick={() => setSelected(null)} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "#6b7280", padding: 4 }}>
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              <p style={{ fontSize: 14, color: "#374151", lineHeight: 1.6, marginBottom: 16 }}>
+                {course.description}
+              </p>
+
+              {edges.filter(e => e.to === courseId).length > 0 && (
+                <div style={{ marginBottom: 16 }}>
+                  <h4 style={{ fontSize: 13, fontWeight: 600, color: "#4b5563", marginBottom: 8 }}>Prerequisites:</h4>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {edges.filter(e => e.to === courseId).map(prereq => {
+                      const prereqCourse = courseMap[prereq.from];
+                      if (!prereqCourse) return null;
+                      const isCompleted = completedCourses.has(prereq.from);
+                      return (
+                        <span key={prereq.from} style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: isCompleted ? "#dcfce7" : "#fee2e2", color: isCompleted ? "#166534" : "#991b1b" }}>
+                          {prereqCourse.name} {prereq.type === "concurrent" ? "(concurrent)" : ""}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {edges.filter(e => e.from === courseId).length > 0 && (
+                <div>
+                  <h4 style={{ fontSize: 13, fontWeight: 600, color: "#4b5563", marginBottom: 8 }}>Enables:</h4>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {edges.filter(e => e.from === courseId).map(enables => {
+                      const enabledCourse = courseMap[enables.to];
+                      if (!enabledCourse || !enabledCourse.programs.includes(view)) return null;
+                      return (
+                        <span key={enables.to} style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: "#e0f2fe", color: "#0c4a6e" }}>
+                          {enabledCourse.name}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Legend (Footer) */}
         <div className="legend" style={{ 
