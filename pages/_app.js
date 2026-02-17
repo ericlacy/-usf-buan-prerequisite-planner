@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { Analytics } from '@vercel/analytics/next';
 
 export default function App({ Component, pageProps }) {
   return (
@@ -20,12 +21,8 @@ export default function App({ Component, pageProps }) {
       {/* Main app component */}
       <Component {...pageProps} />
       
-      {/* Analytics (add your analytics code here) */}
-      {process.env.NODE_ENV === 'production' && (
-        <>
-          {/* Google Analytics or other analytics can go here */}
-        </>
-      )}
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </>
   );
 }
