@@ -467,8 +467,8 @@ function calculateUnits(completedCourses, courses, view) {
   }
 }
 
-const yearLabels = ["First Year\nFall", "First Year\nSpring", "Sophomore", "Junior\nFall", "Junior\nSpring", "Senior\nFall", "Senior\nSpring"];
-const NODE_W = 148, NODE_H = 72, COL_GAP = 166, ROW_GAP = 108, PAD_LEFT = 130, PAD_TOP = 60;
+const yearLabels = [["First Year", "Fall"], ["First Year", "Spring"], ["Sophomore", ""], ["Junior", "Fall"], ["Junior", "Spring"], ["Senior", "Fall"], ["Senior", "Spring"]];
+const NODE_W = 148, NODE_H = 72, COL_GAP = 166, ROW_GAP = 108, PAD_LEFT = 160, PAD_TOP = 60;
 
 function getPos(c) { return { x: PAD_LEFT + c.col * COL_GAP, y: PAD_TOP + c.year * ROW_GAP }; }
 
@@ -1031,10 +1031,18 @@ export default function PrereqPlanner() {
 
             {/* Year labels */}
             {yearLabels.map((label, i) => (
-              <text key={i} x={30} y={PAD_TOP + i * ROW_GAP + NODE_H/2 + 5} 
-                fontSize="11" fontWeight="600" fill="#64748b" textAnchor="middle" style={{ whiteSpace: "pre-line" }}>
-                {label}
-              </text>
+              <g key={i}>
+                <text x={74} y={PAD_TOP + i * ROW_GAP + NODE_H/2 + (label[1] ? -3 : 5)}
+                  fontSize="11" fontWeight="600" fill="#64748b" textAnchor="middle">
+                  {label[0]}
+                </text>
+                {label[1] && (
+                  <text x={74} y={PAD_TOP + i * ROW_GAP + NODE_H/2 + 11}
+                    fontSize="11" fontWeight="600" fill="#64748b" textAnchor="middle">
+                    {label[1]}
+                  </text>
+                )}
+              </g>
             ))}
 
             {/* Prerequisite arrows */}
