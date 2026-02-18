@@ -355,7 +355,7 @@ function buildPath(f, t) {
 }
 
 export default function PrereqPlanner() {
-  const [hovered, setHovered] = useState(null);
+
   const [selected, setSelected] = useState(null);
   const [view, setView] = useState("major");
   
@@ -463,6 +463,11 @@ export default function PrereqPlanner() {
     /* PNG capture optimization */
     .planner-container { 
       max-width: none; 
+    }
+    /* Hover highlight without React re-render */
+    .course-node:hover rect:first-child {
+      filter: brightness(0.96);
+      stroke-width: 2px;
     }
   `;
 
@@ -602,7 +607,7 @@ export default function PrereqPlanner() {
             {[{ k: "major", l: "Major (52u)" }, { k: "minor", l: "Minor (20u)" }].map(v => (
               <button 
                 key={v.k} 
-                onClick={() => { setView(v.k); setSelected(null); setHovered(null); }}
+                onClick={() => { setView(v.k); setSelected(null); }}
                 style={{ 
                   padding: "6px 14px", 
                   border: "none", 
@@ -855,8 +860,6 @@ export default function PrereqPlanner() {
                         transition: "all 0.15s"
                       }}
                       onClick={(e) => { e.stopPropagation(); setSelected(course.id); }}
-                      onMouseEnter={() => setHovered(course.id)}
-                      onMouseLeave={() => setHovered(null)}
                     >
                       {course.name}
                       {course.enrollLimit && <span style={{ color: "#dc2626", marginLeft: 4 }}>⚠</span>}
@@ -991,9 +994,8 @@ export default function PrereqPlanner() {
               if (!fromCourse || !toCourse) return null;
               if (!fromCourse.programs.includes(view) || !toCourse.programs.includes(view)) return null;
               
-              const isActive = (selected === edge.from || selected === edge.to) || 
-                              (hovered === edge.from || hovered === edge.to);
-              const opacity = selected ? (isActive ? 1 : 0.15) : (hovered ? (isActive ? 1 : 0.3) : 0.6);
+              const isActive = selected === edge.from || selected === edge.to;
+              const opacity = selected ? (isActive ? 1 : 0.15) : 0.6;
               
               return (
                 <path key={edge.from + "-" + edge.to} 
@@ -1011,17 +1013,15 @@ export default function PrereqPlanner() {
               const category = getCourseCategory(course, view, minorRequired, majorRequired, completedCourses, availableCourses);
               const col = catColors[status] || catColors[category] || catColors.blocked;
               
-              const isA = selected === course.id || hovered === course.id;
+              const isA = selected === course.id;
               const dim = selected && selected !== course.id && !edges.some(e => (e.from === selected && e.to === course.id) || (e.from === course.id && e.to === selected));
 
               return (
-                <g key={course.id} style={{ cursor: "pointer", transition: "opacity 0.2s" }} opacity={dim ? 0.18 : 1}>
+                <g key={course.id} className="course-node" style={{ cursor: "pointer", transition: "opacity 0.2s" }} opacity={dim ? 0.18 : 1}>
                   <rect 
                     x={pos.x} y={pos.y} width={NODE_W} height={NODE_H} rx={8} 
                     fill={col.bg} stroke={col.border} strokeWidth={isA ? 2 : 1} 
                     filter={!dim ? "url(#sh)" : undefined}
-                    onMouseEnter={() => setHovered(course.id)}
-                    onMouseLeave={() => setHovered(null)}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent unselect
                       if (selected === course.id) {
