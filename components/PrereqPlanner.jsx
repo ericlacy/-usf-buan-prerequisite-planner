@@ -891,28 +891,29 @@ export default function PrereqPlanner() {
               marginBottom: 8,
               marginTop: 16
             }}>
-              {/* Business Core - Only show for Major */}
+              {/* Business Core - Catalog year redirect */}
               {view === "major" && (
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <div style={{ fontSize: 12, color: "#374151", fontWeight: 600 }}>
-                      Business Core
-                    </div>
-                    <div style={{ fontSize: 12, color: "#6b7280" }}>
-                      {unitProgress.businessCore}/32 units
-                    </div>
+                <div style={{
+                  borderLeft: "3px solid #FDBB30",
+                  paddingLeft: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center"
+                }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#374151", marginBottom: 3 }}>
+                    Business Core
                   </div>
-                  <div style={{ width: "100%", background: "#e5e7eb", borderRadius: 4, height: 6 }}>
-                    <div style={{ 
-                      width: `${Math.min(100, (unitProgress.businessCore / 32) * 100)}%`, 
-                      background: "#3b82f6", 
-                      height: "100%", 
-                      borderRadius: 4,
-                      transition: "width 0.3s ease"
-                    }} />
-                  </div>
-                  <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>
-                    {Math.round((unitProgress.businessCore / 32) * 100)}% complete
+                  <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5 }}>
+                    Requirements vary by catalog year. Check your{" "}
+                    <a
+                      href="https://dw-prod.ec.usfca.edu/responsiveDashboard/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "#00543C", fontWeight: 600, textDecoration: "underline" }}
+                    >
+                      Degree Evaluation
+                    </a>{" "}
+                    to confirm what is required for your program.
                   </div>
                 </div>
               )}
