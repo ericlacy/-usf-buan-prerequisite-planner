@@ -20,7 +20,7 @@ const courses = [
   {
     id: "BUS205",
     name: "BUS 205",
-    label: "Applied Business Tech",
+    label: "AI and Emerging Technologies",
     units: 2,
     cat: "minor-req",
     year: 1,
@@ -39,6 +39,17 @@ const courses = [
     programs: ["minor"],
     note: "Minor elective only",
     description: "Prerequisite: RHET 110 (university core requirement). Development and implementation of internet-based business applications including e-commerce, digital marketing, and web-based business models."
+  },
+  {
+    id: "BUS309",
+    name: "BUS 309",
+    label: "Managing Processes & Projects",
+    units: 4,
+    cat: "elective",
+    year: 1,
+    col: 2,
+    programs: ["minor"],
+    description: "Covers process management and project management frameworks for business operations. Students apply tools and techniques to plan, execute, and optimize business processes and projects in organizational settings."
   },
   // Row 2 — Junior Fall
   {
@@ -175,7 +186,8 @@ const edges = [
   { from: "BUS204", to: "BUS340", type: "required" },
   { from: "BUS204", to: "BUS41902", type: "required" },
   { from: "BUS204", to: "BUS415", type: "required" },
-  // BUS 205 → BUS 312
+  // BUS 205 → BUS 309, BUS 312
+  { from: "BUS205", to: "BUS309", type: "required" },
   { from: "BUS205", to: "BUS312", type: "required" },
   // BUS 312 → BUS 315, BUS 316
   { from: "BUS312", to: "BUS315", type: "concurrent" },
@@ -860,8 +872,8 @@ export default function PrereqPlanner() {
             )}
 
             {/* Course Details Panel */}
-            {(hovered || selected) && courseMap[hovered || selected] && (() => {
-              const courseId = hovered || selected;
+            {selected && courseMap[selected] && (() => {
+              const courseId = selected;
               const course = courseMap[courseId];
               return (
                 <div style={{ marginTop: 16, background: "#f8fafc", borderRadius: 8, padding: "16px", border: "1px solid #e2e8f0" }}>
