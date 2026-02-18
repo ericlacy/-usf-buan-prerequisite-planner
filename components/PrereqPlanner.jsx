@@ -301,18 +301,23 @@ function calculateUnits(completedCourses, courses, view) {
     .filter(Boolean);
   
   if (view === "major") {
-    // Major: BUS 312 + BUS 315 = 8 units required analytics
-    const majorAnalyticsCourses = ["BUS312", "BUS315"];
+    // Major core: BUS 312 + BUS 315 = 8u
+    const majorCoreCourses = ["BUS312", "BUS315"];
+    // Excluded from major count: BUS 204, BUS 205 (prereqs only)
+    const majorExcluded = ["BUS204", "BUS205"];
+
     const analyticsCoreUnits = completedCourseObjects
-      .filter(course => majorAnalyticsCourses.includes(course.id))
-      .reduce((total, course) => total + course.units, 0);
-    
-    const totalUnits = completedCourseObjects
-      .reduce((total, course) => total + course.units, 0);
-    
+      .filter(c => majorCoreCourses.includes(c.id))
+      .reduce((sum, c) => sum + c.units, 0);
+
+    const electiveUnits = completedCourseObjects
+      .filter(c => !majorCoreCourses.includes(c.id) && !majorExcluded.includes(c.id) && c.programs.includes("major"))
+      .reduce((sum, c) => sum + c.units, 0);
+
     return {
       analyticsCore: analyticsCoreUnits,
-      total: totalUnits
+      electives: electiveUnits,
+      total: analyticsCoreUnits + electiveUnits
     };
   } else {
     // Minor calculations: 10 units BUAN + 10 units electives = 20 total
@@ -731,7 +736,7 @@ export default function PrereqPlanner() {
             {/* Unit Progress Tracking */}
             <div className="unit-progress" style={{ 
               display: "grid", 
-              gridTemplateColumns: view === "minor" ? "1fr 1fr 1fr" : "repeat(auto-fit, minmax(200px, 1fr))", 
+              gridTemplateColumns: "1fr 1fr 1fr 1fr", 
               gap: 16, 
               padding: "16px", 
               background: "#f9fafb", 
@@ -789,20 +794,20 @@ export default function PrereqPlanner() {
                 </div>
               </div>
 
-              {/* Electives - Only show for Minor */}
-              {view === "minor" && (
+              {/* Electives - show for both major and minor */}
+              {(view === "minor" || view === "major") && (
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                     <div style={{ fontSize: 12, color: "#374151", fontWeight: 600 }}>
                       Electives
                     </div>
                     <div style={{ fontSize: 12, color: "#6b7280" }}>
-                      {unitProgress.electives || 0}/10 units
+                      {unitProgress.electives || 0}/{view === "major" ? 12 : 10} units
                     </div>
                   </div>
                   <div style={{ width: "100%", background: "#e5e7eb", borderRadius: 4, height: 6 }}>
                     <div style={{ 
-                      width: `${Math.min(100, ((unitProgress.electives || 0) / 10) * 100)}%`, 
+                      width: `${Math.min(100, ((unitProgress.electives || 0) / (view === "major" ? 12 : 10)) * 100)}%`, 
                       background: "#10b981", 
                       height: "100%", 
                       borderRadius: 4,
@@ -810,7 +815,7 @@ export default function PrereqPlanner() {
                     }} />
                   </div>
                   <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>
-                    {Math.round(((unitProgress.electives || 0) / 10) * 100)}% complete
+                    {Math.round(((unitProgress.electives || 0) / (view === "major" ? 12 : 10)) * 100)}% complete
                   </div>
                 </div>
               )}
@@ -821,12 +826,12 @@ export default function PrereqPlanner() {
                     {view === "major" ? "Total Progress" : "Minor Progress"}
                   </div>
                   <div style={{ fontSize: 12, color: "#6b7280" }}>
-                    {unitProgress.total}/{view === "major" ? "52" : "20"} units
+                    {unitProgress.total}/20 units
                   </div>
                 </div>
                 <div style={{ width: "100%", background: "#e5e7eb", borderRadius: 4, height: 6 }}>
                   <div style={{ 
-                    width: `${Math.min(100, (unitProgress.total / (view === "major" ? 52 : 20)) * 100)}%`, 
+                    width: `${Math.min(100, (unitProgress.total / 20) * 100)}%`, 
                     background: "#10b981", 
                     height: "100%", 
                     borderRadius: 4,
@@ -834,7 +839,7 @@ export default function PrereqPlanner() {
                   }} />
                 </div>
                 <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2 }}>
-                  {Math.round((unitProgress.total / (view === "major" ? 52 : 20)) * 100)}% complete
+                  {Math.round((unitProgress.total / 20) * 100)}% complete
                 </div>
               </div>
             </div>
