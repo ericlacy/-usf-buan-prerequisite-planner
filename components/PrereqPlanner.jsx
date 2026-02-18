@@ -16,7 +16,7 @@ const courses = [
     programs: ["major", "minor"],
     description: "Prerequisite: RHET 110 (university core requirement). Utilizes spreadsheets for data analysis and modeling to inform business decisions. Covers regression models, forecasting, decision analysis, and optimizing resource allocation for strategic decision-making."
   },
-  // Row 1 — Intermediate
+  // Row 1 — Sophomore Spring
   {
     id: "BUS205",
     name: "BUS 205",
@@ -29,30 +29,18 @@ const courses = [
     description: "Applied business technology course focusing on practical software and technology skills for business applications."
   },
   {
-    id: "BUS308",
-    name: "BUS 308",
-    label: "Process & Project Mgmt",
-    units: 2,
-    cat: "elective",
-    year: 1,
-    col: 1,
-    programs: ["major", "minor"],
-    minStanding: 1,
-    description: "Introduces core concepts in business process modeling and project management. Students learn to evaluate and improve organizational processes, develop project plans, and understand how technology supports process improvement and project management."
-  },
-  {
     id: "BUS370",
     name: "BUS 370",
     label: "Internet Business Apps",
     units: 4,
     cat: "minor-only",
     year: 1,
-    col: 2,
+    col: 1,
     programs: ["minor"],
     note: "Minor elective only",
     description: "Prerequisite: RHET 110 (university core requirement). Development and implementation of internet-based business applications including e-commerce, digital marketing, and web-based business models."
   },
-  // Row 2 — Upper Division
+  // Row 2 — Junior Fall
   {
     id: "BUS312",
     name: "BUS 312",
@@ -67,13 +55,25 @@ const courses = [
     description: "Apply analytical tools to collect and explore digital data from various digital platforms (databases, mobile apps, social media, etc.). Introduces digital analytics techniques to provide managerial insights and improve business decision-making."
   },
   {
+    id: "BUS315",
+    name: "BUS 315",
+    label: "Data Mining for Business",
+    units: 4,
+    cat: "required",
+    year: 2,
+    col: 1,
+    programs: ["major", "minor"],
+    sem: "Fall",
+    description: "Data mining is about investigating relationships in data. Introduces skills, techniques, and focus needed by today's managers to prepare and analyze data to identify patterns, anomalies, sentiments, insights, risks, and opportunities in a competitive business environment."
+  },
+  {
     id: "BUS340",
     name: "BUS 340",
     label: "Data Visualization",
     units: 2,
     cat: "elective",
     year: 2,
-    col: 1,
+    col: 2,
     programs: ["major", "minor"],
     sem: "Fall",
     description: "Introduction to data visualization principles and techniques for improving comprehension, communication, and decision making. Learn how combining data sources with advanced analytics can power new business opportunities."
@@ -85,25 +85,13 @@ const courses = [
     units: 2,
     cat: "elective",
     year: 2,
-    col: 2,
+    col: 3,
     programs: ["major", "minor"],
     sem: "Fall & Spring",
     enrollLimit: true,
     description: "Provides comprehensive understanding of technology-society relationships. Students critically assess ethical, economic, and cultural implications of technology adoption and develop strategic approaches to address societal challenges in the digital age."
   },
-  // Row 3 — Advanced
-  {
-    id: "BUS315",
-    name: "BUS 315",
-    label: "Data Mining for Business",
-    units: 4,
-    cat: "required",
-    year: 3,
-    col: 0,
-    programs: ["major", "minor"],
-    sem: "Fall",
-    description: "Data mining is about investigating relationships in data. Introduces skills, techniques, and focus needed by today's managers to prepare and analyze data to identify patterns, anomalies, sentiments, insights, risks, and opportunities in a competitive business environment."
-  },
+  // Row 3 — Junior Spring
   {
     id: "BUS316",
     name: "BUS 316",
@@ -111,37 +99,12 @@ const courses = [
     units: 2,
     cat: "elective",
     year: 3,
-    col: 1,
+    col: 0,
     programs: ["major", "minor"],
     sem: "Spring",
     description: "Comprehensive overview of machine learning techniques and their applications across business functions. Hands-on experience with supervised and unsupervised learning, forecasting, segmentation, and predictive analytics, and their impact on business strategy."
   },
-  {
-    id: "BUS410",
-    name: "BUS 410",
-    label: "Analytics for Good",
-    units: 4,
-    cat: "elective",
-    year: 3,
-    col: 2,
-    programs: ["major", "minor"],
-    sem: "Fall & Spring",
-    description: "Hands-on exploration of advanced business analytics tools applied to real-world community projects. Uses data cleaning, visualization, exploratory analysis, machine learning, and AI to tackle community-based challenges, with ethical considerations throughout."
-  },
-  // Row 4 — Capstone
-  {
-    id: "BUS415",
-    name: "BUS 415",
-    label: "Supply Chain Mgmt",
-    units: 2,
-    cat: "elective",
-    year: 4,
-    col: 0,
-    programs: ["major", "minor"],
-    sem: "Fall & Spring",
-    enrollLimit: true,
-    description: "Explores supply chain management from sourcing raw materials to end customers. Real-world examples and latest challenges in the field, equipping students to understand current business landscapes and anticipate future trends."
-  },
+  // Row 4 — Senior
   {
     id: "BUS317",
     name: "BUS 317",
@@ -149,10 +112,22 @@ const courses = [
     units: 2,
     cat: "elective",
     year: 4,
-    col: 1,
+    col: 0,
     programs: ["major", "minor"],
     sem: "Spring",
     description: "Equips students with advanced AI techniques reshaping industries today. Covers key AI concepts including machine learning, deep learning, and natural language processing, with practical applications in business through case studies and hands-on projects."
+  },
+  {
+    id: "BUS410",
+    name: "BUS 410",
+    label: "Analytics for Good",
+    units: 4,
+    cat: "elective",
+    year: 4,
+    col: 1,
+    programs: ["major", "minor"],
+    sem: "Fall & Spring",
+    description: "Hands-on exploration of advanced business analytics tools applied to real-world community projects. Uses data cleaning, visualization, exploratory analysis, machine learning, and AI to tackle community-based challenges, with ethical considerations throughout."
   },
   {
     id: "BUS411",
@@ -167,13 +142,26 @@ const courses = [
     description: "Case studies, guest lectures, site visits, and projects with real-world data provide experiences in creating real business value. Analytical frameworks enable decision-making across industry domains. Students develop solutions for ambiguous and complex business problems."
   },
   {
+    id: "BUS415",
+    name: "BUS 415",
+    label: "Supply Chain Mgmt",
+    units: 2,
+    cat: "elective",
+    year: 4,
+    col: 3,
+    programs: ["major", "minor"],
+    sem: "Fall & Spring",
+    enrollLimit: true,
+    description: "Explores supply chain management from sourcing raw materials to end customers. Real-world examples and latest challenges in the field, equipping students to understand current business landscapes and anticipate future trends."
+  },
+  {
     id: "BUS41901",
     name: "BUS 419-01",
     label: "Business Impact Studio",
     units: 2,
     cat: "elective",
     year: 4,
-    col: 3,
+    col: 4,
     programs: ["major", "minor"],
     sem: "Fall & Spring",
     enrollLimit: true,
@@ -187,8 +175,7 @@ const edges = [
   { from: "BUS204", to: "BUS340", type: "required" },
   { from: "BUS204", to: "BUS41902", type: "required" },
   { from: "BUS204", to: "BUS415", type: "required" },
-  // BUS 205 → BUS 308, BUS 312
-  { from: "BUS205", to: "BUS308", type: "required" },
+  // BUS 205 → BUS 312
   { from: "BUS205", to: "BUS312", type: "required" },
   // BUS 312 → BUS 315, BUS 316
   { from: "BUS312", to: "BUS315", type: "concurrent" },
@@ -352,7 +339,7 @@ function calculateUnits(completedCourses, courses, view) {
   }
 }
 
-const yearLabels = [["Foundation", ""], ["Intermediate", ""], ["Upper Div.", ""], ["Advanced", ""], ["Capstone", ""]];
+const yearLabels = [["Sophomore", "Fall"], ["Sophomore", "Spring"], ["Junior", "Fall"], ["Junior", "Spring"], ["Senior", ""]];
 const NODE_W = 148, NODE_H = 72, COL_GAP = 166, ROW_GAP = 108, PAD_LEFT = 160, PAD_TOP = 60;
 
 function getPos(c) { return { x: PAD_LEFT + c.col * COL_GAP, y: PAD_TOP + c.year * ROW_GAP }; }
