@@ -1,143 +1,32 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 
-// Course data and configuration
+// Course data and configuration — BUAN courses only
+// Business Core courses (RHET 110, BUS 100/201/202/301/302/304/305/403, ECON 110) are
+// tracked separately via your Degree Evaluation in Banner/myUSF.
 const courses = [
-  { 
-    id: "RHET", 
-    name: "RHET 110", 
-    label: "First Year Rhetoric", 
-    units: 4, 
-    cat: "foundation", 
-    year: 0, 
-    col: 0, 
+  // Row 0 — Foundation
+  {
+    id: "BUS204",
+    name: "BUS 204",
+    label: "Foundations of Analytics",
+    units: 4,
+    cat: "minor-req",
+    year: 0,
+    col: 0,
     programs: ["major", "minor"],
-    description: "University core rhetoric and writing course required for all students."
+    description: "Prerequisite: RHET 110 (university core requirement). Utilizes spreadsheets for data analysis and modeling to inform business decisions. Covers regression models, forecasting, decision analysis, and optimizing resource allocation for strategic decision-making."
   },
-  { 
-    id: "BUS100", 
-    name: "BUS 100", 
-    label: "Launch into Business", 
-    units: 2, 
-    cat: "core", 
-    year: 0, 
-    col: 1, 
-    programs: ["major"],
-    description: "Introduction to business fundamentals, career exploration, and professional development in the business world."
-  },
-  { 
-    id: "BUS201", 
-    name: "BUS 201", 
-    label: "Financial Accounting", 
-    units: 4, 
-    cat: "core", 
-    year: 0, 
-    col: 2, 
-    programs: ["major"],
-    description: "Fundamentals of financial accounting including financial statements, recording transactions, and basic financial analysis for business decision-making."
-  },
-  { 
-    id: "ECON110", 
-    name: "ECON 110", 
-    label: "Principles of Economics", 
-    units: 4, 
-    cat: "core", 
-    year: 1, 
-    col: 0, 
-    programs: ["major"],
-    description: "Introduction to microeconomic and macroeconomic principles including supply and demand, market structures, and economic policy."
-  },
-  { 
-    id: "BUS204", 
-    name: "BUS 204", 
-    label: "Foundations of Analytics", 
-    units: 4, 
-    cat: "minor-req", 
-    year: 1, 
-    col: 1, 
-    programs: ["major", "minor"],
-    description: "Utilizes spreadsheets for data analysis and modeling to inform business decisions. Covers regression models, forecasting, decision analysis, and optimizing resource allocation for strategic decision-making."
-  },
-  { 
-    id: "BUS202", 
-    name: "BUS 202", 
-    label: "Managerial Accounting", 
-    units: 2, 
-    cat: "core", 
-    year: 2, 
-    col: 0, 
-    programs: ["major"],
-    description: "Introduces business analytics through spreadsheet modeling, data visualization, and statistical analysis. Students solve business problems using techniques like sensitivity analysis, regression, and optimization."
-  },
-  { 
-    id: "BUS205", 
-    name: "BUS 205", 
-    label: "Applied Business Tech", 
-    units: 2, 
-    cat: "minor-req", 
-    year: 2, 
-    col: 1, 
+  // Row 1 — Intermediate
+  {
+    id: "BUS205",
+    name: "BUS 205",
+    label: "Applied Business Tech",
+    units: 2,
+    cat: "minor-req",
+    year: 1,
+    col: 0,
     programs: ["major", "minor"],
     description: "Applied business technology course focusing on practical software and technology skills for business applications."
-  },
-  {
-    id: "BUS301",
-    name: "BUS 301",
-    label: "Business Law",
-    units: 4,
-    cat: "core",
-    year: 2,
-    col: 2,
-    programs: ["major"],
-    minStanding: 1,
-    description: "An introduction to law and the legal system as it affects organizational structures and managerial decision-making. Topics include legal processes, constitutional law, business crimes and torts, property and contracts."
-  },
-  {
-    id: "BUS302",
-    name: "BUS 302",
-    label: "Marketing Principles",
-    units: 4,
-    cat: "core",
-    year: 2,
-    col: 3,
-    programs: ["major"],
-    minStanding: 1,
-    description: "Examines the role of marketing in society and the organization. Focuses on consumer behavior and the marketing mix — product, price, promotion, and distribution — with emphasis on developing effective marketing strategies."
-  },
-  {
-    id: "BUS304",
-    name: "BUS 304",
-    label: "Organizational Behavior",
-    units: 4,
-    cat: "core",
-    year: 2,
-    col: 4,
-    programs: ["major"],
-    minStanding: 1,
-    description: "Theory and practice of contemporary management and organizational behavior. Students develop skills to work effectively with others, analyze organizational cases, and identify solutions. Themes include motivation, team dynamics, leadership, and organizational culture."
-  },
-  {
-    id: "BUS305",
-    name: "BUS 305",
-    label: "Principles of Finance",
-    units: 4,
-    cat: "core",
-    year: 2,
-    col: 5,
-    programs: ["major"],
-    minStanding: 1,
-    description: "Introductory finance course covering time value of money, risk and return relationships, the financial environment, financial statements, stock and bond valuation, and capital budgeting."
-  },
-  { 
-    id: "BUS370", 
-    name: "BUS 370", 
-    label: "Internet Business Apps", 
-    units: 4, 
-    cat: "minor-only", 
-    year: 2, 
-    col: 5, 
-    programs: ["minor"], 
-    note: "Minor elective only",
-    description: "Development and implementation of internet-based business applications including e-commerce, digital marketing, and web-based business models."
   },
   {
     id: "BUS308",
@@ -145,58 +34,72 @@ const courses = [
     label: "Process & Project Mgmt",
     units: 2,
     cat: "elective",
-    year: 3,
-    col: 0,
+    year: 1,
+    col: 1,
     programs: ["major", "minor"],
     minStanding: 1,
     description: "Introduces core concepts in business process modeling and project management. Students learn to evaluate and improve organizational processes, develop project plans, and understand how technology supports process improvement and project management."
   },
+  {
+    id: "BUS370",
+    name: "BUS 370",
+    label: "Internet Business Apps",
+    units: 4,
+    cat: "minor-only",
+    year: 1,
+    col: 2,
+    programs: ["minor"],
+    note: "Minor elective only",
+    description: "Prerequisite: RHET 110 (university core requirement). Development and implementation of internet-based business applications including e-commerce, digital marketing, and web-based business models."
+  },
+  // Row 2 — Upper Division
   {
     id: "BUS312",
     name: "BUS 312",
     label: "Data Wrangling",
     units: 4,
     cat: "minor-req",
-    year: 3,
-    col: 1,
+    year: 2,
+    col: 0,
     programs: ["major", "minor"],
     sem: "Fall",
     minStanding: 2,
     description: "Apply analytical tools to collect and explore digital data from various digital platforms (databases, mobile apps, social media, etc.). Introduces digital analytics techniques to provide managerial insights and improve business decision-making."
   },
-  { 
-    id: "BUS340", 
-    name: "BUS 340", 
-    label: "Data Visualization", 
-    units: 2, 
-    cat: "elective", 
-    year: 3, 
-    col: 3, 
-    programs: ["major", "minor"], 
+  {
+    id: "BUS340",
+    name: "BUS 340",
+    label: "Data Visualization",
+    units: 2,
+    cat: "elective",
+    year: 2,
+    col: 1,
+    programs: ["major", "minor"],
     sem: "Fall",
     description: "Introduction to data visualization principles and techniques for improving comprehension, communication, and decision making. Learn how combining data sources with advanced analytics can power new business opportunities."
   },
-  { 
-    id: "BUS41902", 
-    name: "BUS 419-02", 
-    label: "Societal Impact of Tech", 
-    units: 2, 
-    cat: "elective", 
-    year: 3, 
-    col: 4, 
-    programs: ["major", "minor"], 
-    sem: "Fall & Spring", 
+  {
+    id: "BUS41902",
+    name: "BUS 419-02",
+    label: "Societal Impact of Tech",
+    units: 2,
+    cat: "elective",
+    year: 2,
+    col: 2,
+    programs: ["major", "minor"],
+    sem: "Fall & Spring",
     enrollLimit: true,
     description: "Provides comprehensive understanding of technology-society relationships. Students critically assess ethical, economic, and cultural implications of technology adoption and develop strategic approaches to address societal challenges in the digital age."
   },
+  // Row 3 — Advanced
   {
     id: "BUS315",
     name: "BUS 315",
     label: "Data Mining for Business",
     units: 4,
     cat: "required",
-    year: 4,
-    col: 1,
+    year: 3,
+    col: 0,
     programs: ["major", "minor"],
     sem: "Fall",
     description: "Data mining is about investigating relationships in data. Introduces skills, techniques, and focus needed by today's managers to prepare and analyze data to identify patterns, anomalies, sentiments, insights, risks, and opportunities in a competitive business environment."
@@ -207,8 +110,8 @@ const courses = [
     label: "ML for Business",
     units: 2,
     cat: "elective",
-    year: 4,
-    col: 2,
+    year: 3,
+    col: 1,
     programs: ["major", "minor"],
     sem: "Spring",
     description: "Comprehensive overview of machine learning techniques and their applications across business functions. Hands-on experience with supervised and unsupervised learning, forecasting, segmentation, and predictive analytics, and their impact on business strategy."
@@ -219,11 +122,25 @@ const courses = [
     label: "Analytics for Good",
     units: 4,
     cat: "elective",
-    year: 4,
-    col: 4,
+    year: 3,
+    col: 2,
     programs: ["major", "minor"],
     sem: "Fall & Spring",
     description: "Hands-on exploration of advanced business analytics tools applied to real-world community projects. Uses data cleaning, visualization, exploratory analysis, machine learning, and AI to tackle community-based challenges, with ethical considerations throughout."
+  },
+  // Row 4 — Capstone
+  {
+    id: "BUS415",
+    name: "BUS 415",
+    label: "Supply Chain Mgmt",
+    units: 2,
+    cat: "elective",
+    year: 4,
+    col: 0,
+    programs: ["major", "minor"],
+    sem: "Fall & Spring",
+    enrollLimit: true,
+    description: "Explores supply chain management from sourcing raw materials to end customers. Real-world examples and latest challenges in the field, equipping students to understand current business landscapes and anticipate future trends."
   },
   {
     id: "BUS317",
@@ -231,8 +148,8 @@ const courses = [
     label: "AI for Business",
     units: 2,
     cat: "elective",
-    year: 5,
-    col: 2,
+    year: 4,
+    col: 1,
     programs: ["major", "minor"],
     sem: "Spring",
     description: "Equips students with advanced AI techniques reshaping industries today. Covers key AI concepts including machine learning, deep learning, and natural language processing, with practical applications in business through case studies and hands-on projects."
@@ -243,75 +160,40 @@ const courses = [
     label: "BA Immersion",
     units: 2,
     cat: "elective",
-    year: 5,
-    col: 3,
+    year: 4,
+    col: 2,
     programs: ["major", "minor"],
     sem: "Spring",
     description: "Case studies, guest lectures, site visits, and projects with real-world data provide experiences in creating real business value. Analytical frameworks enable decision-making across industry domains. Students develop solutions for ambiguous and complex business problems."
   },
-  { 
-    id: "BUS415", 
-    name: "BUS 415", 
-    label: "Supply Chain Mgmt", 
-    units: 2, 
-    cat: "elective", 
-    year: 5, 
-    col: 1, 
-    programs: ["major", "minor"], 
+  {
+    id: "BUS41901",
+    name: "BUS 419-01",
+    label: "Business Impact Studio",
+    units: 2,
+    cat: "elective",
+    year: 4,
+    col: 3,
+    programs: ["major", "minor"],
     sem: "Fall & Spring",
     enrollLimit: true,
-    description: "Explores supply chain management from sourcing raw materials to end customers. Real-world examples and latest challenges in the field, equipping students to understand current business landscapes and anticipate future trends."
-  },
-  { 
-    id: "BUS41901", 
-    name: "BUS 419-01", 
-    label: "Business Impact Studio", 
-    units: 2, 
-    cat: "elective", 
-    year: 5, 
-    col: 4, 
-    programs: ["major", "minor"], 
-    sem: "Fall & Spring", 
-    enrollLimit: true,
     description: "Work directly with real organizations on high-stakes business challenges. Meet with client executives, diagnose problems, and deliver usable solutions. Provides portfolio-ready work, references, and consulting experience."
-  },
-  {
-    id: "BUS403",
-    name: "BUS 403",
-    label: "Entrepreneurial Strategy",
-    units: 4,
-    cat: "core",
-    year: 6,
-    col: 1,
-    programs: ["major"],
-    minStanding: 3,
-    description: "Propels students into the world of strategy and innovation, emphasizing critical thinking, problem solving, and advanced decision-making. Covers assessing macro environments, analyzing firm performance, developing innovative business models, and cultivating an entrepreneurial mindset."
   },
 ];
 
 const edges = [
-  // Foundation / Core prereqs
-  { from: "RHET", to: "BUS100", type: "concurrent" },
-  { from: "RHET", to: "BUS201", type: "concurrent" },
-  { from: "RHET", to: "BUS204", type: "concurrent" },
-  { from: "BUS201", to: "BUS202", type: "required" },
-  { from: "BUS204", to: "BUS202", type: "concurrent" },
+  // BUS 204 → BUS 205, BUS 340, BUS 419-02
   { from: "BUS204", to: "BUS205", type: "concurrent" },
-  { from: "BUS201", to: "BUS305", type: "required" },
-  { from: "ECON110", to: "BUS305", type: "required" },
-  // BUS 308
-  { from: "BUS205", to: "BUS308", type: "required" },
-  // BUS 312 (required analytics)
-  { from: "BUS205", to: "BUS312", type: "required" },
-  // BUS 340 elective
   { from: "BUS204", to: "BUS340", type: "required" },
-  // BUS 419-02 (prereq: BUS 204 C-)
   { from: "BUS204", to: "BUS41902", type: "required" },
-  // BUS 315 (concurrent BUS 312)
+  { from: "BUS204", to: "BUS415", type: "required" },
+  // BUS 205 → BUS 308, BUS 312
+  { from: "BUS205", to: "BUS308", type: "required" },
+  { from: "BUS205", to: "BUS312", type: "required" },
+  // BUS 312 → BUS 315, BUS 316
   { from: "BUS312", to: "BUS315", type: "concurrent" },
-  // BUS 316 (concurrent BUS 312)
   { from: "BUS312", to: "BUS316", type: "concurrent" },
-  // BUS 317 (concurrent BUS 316)
+  // BUS 316 → BUS 317
   { from: "BUS316", to: "BUS317", type: "concurrent" },
   // BUS 410 prereqs: BUS 204, 340, 312, 315, 316
   { from: "BUS204", to: "BUS410", type: "required" },
@@ -331,23 +213,10 @@ const edges = [
   { from: "BUS312", to: "BUS41901", type: "required" },
   { from: "BUS315", to: "BUS41901", type: "required" },
   { from: "BUS316", to: "BUS41901", type: "required" },
-  // BUS 403 (Senior capstone)
-  { from: "BUS301", to: "BUS403", type: "required" },
-  { from: "BUS302", to: "BUS403", type: "required" },
-  { from: "BUS304", to: "BUS403", type: "required" },
-  { from: "BUS305", to: "BUS403", type: "required" },
-  { from: "BUS308", to: "BUS403", type: "concurrent" },
-  // BUS 415 (no listed prereq in catalog — available after BUS 204)
-  { from: "BUS204", to: "BUS415", type: "required" },
-  // BUS 370 minor elective
-  { from: "RHET", to: "BUS370", type: "required" },
 ];
 
 const majorRequired = ["BUS312", "BUS315"];
 const minorRequired = ["BUS204", "BUS205", "BUS312"];
-
-// Business Core courses for unit tracking
-const businessCoreCourses = ["BUS100", "BUS201", "BUS202", "BUS301", "BUS302", "BUS304", "BUS305", "BUS403", "ECON110"];
 
 // Semester colors - Fixed to be different
 const semesterColors = {
@@ -371,19 +240,7 @@ const catColors = {
 // Planning Logic Functions
 function checkPrerequisites(courseId, completedCourses, edges, view = "major") {
   const prereqs = edges.filter(e => e.to === courseId);
-  
-  return prereqs.every(prereq => {
-    // Special case: Remove RHET requirement for BUS 204 in minor view only
-    if (view === "minor" && prereq.from === "RHET" && courseId === "BUS204") {
-      return true; // Skip RHET requirement for minor
-    }
-    
-    if (prereq.type === "concurrent") {
-      // Concurrent can be taken at the same time or already completed
-      return completedCourses.has(prereq.from);
-    }
-    return completedCourses.has(prereq.from);
-  });
+  return prereqs.every(prereq => completedCourses.has(prereq.from));
 }
 
 function findAvailableCourses(completedCourses, currentSemester, classStanding, program, courses, edges) {
@@ -495,7 +352,7 @@ function calculateUnits(completedCourses, courses, view) {
   }
 }
 
-const yearLabels = [["First Year", "Fall"], ["First Year", "Spring"], ["Sophomore", ""], ["Junior", "Fall"], ["Junior", "Spring"], ["Senior", "Fall"], ["Senior", "Spring"]];
+const yearLabels = [["Foundation", ""], ["Intermediate", ""], ["Upper Div.", ""], ["Advanced", ""], ["Capstone", ""]];
 const NODE_W = 148, NODE_H = 72, COL_GAP = 166, ROW_GAP = 108, PAD_LEFT = 160, PAD_TOP = 60;
 
 function getPos(c) { return { x: PAD_LEFT + c.col * COL_GAP, y: PAD_TOP + c.year * ROW_GAP }; }
@@ -677,13 +534,7 @@ export default function PrereqPlanner() {
         // Find missing prerequisites (filter by view for RHET special case)
         const prereqs = edges.filter(e => e.to === courseId);
         const missingPrereqs = prereqs
-          .filter(prereq => {
-            // Skip RHET requirement for BUS 204 in minor view
-            if (view === "minor" && prereq.from === "RHET" && courseId === "BUS204") {
-              return false;
-            }
-            return !completedCourses.has(prereq.from);
-          })
+          .filter(prereq => !completedCourses.has(prereq.from))
           .map(prereq => courseMap[prereq.from]?.name || prereq.from);
         
         const courseName = courseMap[courseId]?.name || courseId;
