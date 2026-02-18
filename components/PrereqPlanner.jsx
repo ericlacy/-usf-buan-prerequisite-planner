@@ -289,25 +289,17 @@ function calculateUnits(completedCourses, courses, view) {
     .filter(Boolean);
   
   if (view === "major") {
-    // Major calculations
-    const businessCoreUnits = completedCourseObjects
-      .filter(course => businessCoreCourses.includes(course.id))
-      .reduce((total, course) => total + course.units, 0);
-      
-    // Major: BUS 312 + BUS 315 = 8 units
+    // Major: BUS 312 + BUS 315 = 8 units required analytics
     const majorAnalyticsCourses = ["BUS312", "BUS315"];
     const analyticsCoreUnits = completedCourseObjects
       .filter(course => majorAnalyticsCourses.includes(course.id))
       .reduce((total, course) => total + course.units, 0);
     
-    // Exclude RHET from total unit calculations (it's university core, not major)
     const totalUnits = completedCourseObjects
-      .filter(course => course.id !== "RHET")
       .reduce((total, course) => total + course.units, 0);
     
     return {
-      businessCore: businessCoreUnits,
-      analyticsCore: analyticsCoreUnits, 
+      analyticsCore: analyticsCoreUnits,
       total: totalUnits
     };
   } else {
