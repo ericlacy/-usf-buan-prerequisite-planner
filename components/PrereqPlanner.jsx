@@ -540,72 +540,73 @@ export default function PrereqPlanner() {
   return (
     <div className="planner-container" style={{ fontFamily: "'Inter', -apple-system, system-ui, sans-serif", background: "#fafbfc", minHeight: "100vh", padding: 20 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12, marginBottom: 12 }}>
-          <div>
-            <h1 style={{ fontSize: 22, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>
-              Business Analytics Course Planner
-            </h1>
-            <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>
-              Mark completed courses to see what you can take next. Click courses to explore prerequisites.
-            </p>
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button 
-              className="save-button"
-              onClick={generateImage}
-              style={{ 
-                padding: "8px 16px", 
-                border: "1px solid #FDBB30", 
-                borderRadius: 6, 
-                background: "#FDBB30",
-                color: "#0f172a",
-                cursor: "pointer",
-                fontSize: 12,
-                fontWeight: 600,
-                display: "flex",
-                alignItems: "center",
-                gap: 6
-              }}
-            >
-              ⬇ Save Image
-            </button>
-            <button 
-              onClick={() => setShowPlanner(!showPlanner)}
-              style={{ 
-                padding: "8px 16px", 
-                border: "1px solid #d1d5db", 
-                borderRadius: 6, 
-                background: showPlanner ? "#00543C" : "#fff",
-                color: showPlanner ? "#fff" : "#374151",
-                cursor: "pointer",
-                fontSize: 12,
-                fontWeight: 500
-              }}
-            >
-              {showPlanner ? "Hide Planner" : "Show Planner"}
-            </button>
-            <div style={{ display: "flex", gap: 4, background: "#f1f5f9", borderRadius: 8, padding: 3 }}>
-              {[{ k: "major", l: "Major (52u)" }, { k: "minor", l: "Minor (20u)" }].map(v => (
-                <button 
-                  key={v.k} 
-                  onClick={() => { setView(v.k); setSelected(null); setHovered(null); }}
-                  style={{ 
-                    padding: "6px 14px", 
-                    border: "none", 
-                    borderRadius: 6, 
-                    cursor: "pointer", 
-                    fontSize: 12, 
-                    fontWeight: 600, 
-                    transition: "all 0.15s", 
-                    background: view === v.k ? "#fff" : "transparent", 
-                    color: view === v.k ? "#0f172a" : "#64748b", 
-                    boxShadow: view === v.k ? "0 1px 3px rgba(0,0,0,0.1)" : "none" 
-                  }}
-                >
-                  {v.l}
-                </button>
-              ))}
-            </div>
+        {/* USF Branded Header */}
+        <div style={{ background: "#00543C", borderBottom: "3px solid #FDBB30", borderRadius: "12px 12px 0 0", padding: "24px 28px 20px", marginBottom: 0 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#FDBB30", margin: "0 0 4px", letterSpacing: "-0.3px" }}>
+            Business Analytics Course Prerequisite Planner
+          </h1>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: 0, fontWeight: 400 }}>
+            University of San Francisco · McLaren School of Management
+          </p>
+        </div>
+
+        {/* Controls Bar */}
+        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 8, background: "#f8fafc", border: "1px solid #e2e8f0", borderTop: "none", padding: "10px 16px", marginBottom: 12 }}>
+          <button 
+            className="save-button"
+            onClick={generateImage}
+            style={{ 
+              padding: "7px 14px", 
+              border: "1px solid #FDBB30", 
+              borderRadius: 6, 
+              background: "#FDBB30",
+              color: "#0f172a",
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: 6
+            }}
+          >
+            ⬇ Save Image
+          </button>
+          <button 
+            onClick={() => setShowPlanner(!showPlanner)}
+            style={{ 
+              padding: "7px 14px", 
+              border: "1px solid #d1d5db", 
+              borderRadius: 6, 
+              background: showPlanner ? "#00543C" : "#fff",
+              color: showPlanner ? "#fff" : "#374151",
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 500
+            }}
+          >
+            {showPlanner ? "Hide Planner" : "Show Planner"}
+          </button>
+          <div style={{ display: "flex", gap: 4, background: "#f1f5f9", borderRadius: 8, padding: 3 }}>
+            {[{ k: "major", l: "Major (52u)" }, { k: "minor", l: "Minor (20u)" }].map(v => (
+              <button 
+                key={v.k} 
+                onClick={() => { setView(v.k); setSelected(null); setHovered(null); }}
+                style={{ 
+                  padding: "6px 14px", 
+                  border: "none", 
+                  borderRadius: 6, 
+                  cursor: "pointer", 
+                  fontSize: 12, 
+                  fontWeight: 600, 
+                  transition: "all 0.15s", 
+                  background: view === v.k ? "#fff" : "transparent", 
+                  color: view === v.k ? "#0f172a" : "#64748b", 
+                  boxShadow: view === v.k ? "0 1px 3px rgba(0,0,0,0.1)" : "none" 
+                }}
+              >
+                {v.l}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -857,6 +858,77 @@ export default function PrereqPlanner() {
                 </div>
               </div>
             )}
+
+            {/* Course Details Panel */}
+            {(hovered || selected) && courseMap[hovered || selected] && (() => {
+              const courseId = hovered || selected;
+              const course = courseMap[courseId];
+              return (
+                <div style={{ marginTop: 16, background: "#f8fafc", borderRadius: 8, padding: "16px", border: "1px solid #e2e8f0" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                    <div>
+                      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>
+                        {course.name} — {course.label}
+                      </h3>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                        <span style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "#3b82f6", color: "#fff" }}>
+                          {course.units} units
+                        </span>
+                        {course.sem && (
+                          <span style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: semesterColors[course.sem], color: "#fff" }}>
+                            {course.sem}
+                          </span>
+                        )}
+                        {course.enrollLimit && (
+                          <span style={{ fontSize: 12, color: "#dc2626" }}>⚠ Enrollment Limited</span>
+                        )}
+                      </div>
+                    </div>
+                    {selected === courseId && (
+                      <button onClick={() => setSelected(null)} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "#6b7280", padding: 4 }}>
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                  <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.6, margin: "10px 0 12px" }}>
+                    {course.description}
+                  </p>
+                  {edges.filter(e => e.to === courseId).length > 0 && (
+                    <div style={{ marginBottom: 10 }}>
+                      <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Prerequisites:</h4>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                        {edges.filter(e => e.to === courseId).map(prereq => {
+                          const prereqCourse = courseMap[prereq.from];
+                          if (!prereqCourse) return null;
+                          const isCompleted = completedCourses.has(prereq.from);
+                          return (
+                            <span key={prereq.from} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: isCompleted ? "#dcfce7" : "#fee2e2", color: isCompleted ? "#166534" : "#991b1b" }}>
+                              {prereqCourse.name} {prereq.type === "concurrent" ? "(concurrent)" : ""}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {edges.filter(e => e.from === courseId).length > 0 && (
+                    <div>
+                      <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Enables:</h4>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                        {edges.filter(e => e.from === courseId).map(enables => {
+                          const enabledCourse = courseMap[enables.to];
+                          if (!enabledCourse || !enabledCourse.programs.includes(view)) return null;
+                          return (
+                            <span key={enables.to} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: "#e0f2fe", color: "#0c4a6e" }}>
+                              {enabledCourse.name}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -990,87 +1062,6 @@ export default function PrereqPlanner() {
             })}
           </svg>
         </div>
-
-        {/* Course Details Panel - shown on hover or click, placed below map to prevent jitter */}
-        {(hovered || selected) && courseMap[hovered || selected] && (() => {
-          const courseId = hovered || selected;
-          const course = courseMap[courseId];
-          return (
-            <div style={{
-              marginTop: 16,
-              background: "#fff",
-              borderRadius: 12,
-              padding: "20px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.07)",
-              border: "1px solid #e2e8f0"
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-                <div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>
-                    {course.name} - {course.label}
-                  </h3>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
-                    <span style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "#3b82f6", color: "#fff" }}>
-                      {course.units} units
-                    </span>
-                    {course.sem && (
-                      <span style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: semesterColors[course.sem], color: "#fff" }}>
-                        {course.sem}
-                      </span>
-                    )}
-                    {course.enrollLimit && (
-                      <span style={{ fontSize: 12, color: "#dc2626" }}>⚠ Enrollment Limited</span>
-                    )}
-                  </div>
-                </div>
-                {selected === courseId && (
-                  <button onClick={() => setSelected(null)} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "#6b7280", padding: 4 }}>
-                    ✕
-                  </button>
-                )}
-              </div>
-
-              <p style={{ fontSize: 14, color: "#374151", lineHeight: 1.6, marginBottom: 16 }}>
-                {course.description}
-              </p>
-
-              {edges.filter(e => e.to === courseId).length > 0 && (
-                <div style={{ marginBottom: 16 }}>
-                  <h4 style={{ fontSize: 13, fontWeight: 600, color: "#4b5563", marginBottom: 8 }}>Prerequisites:</h4>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                    {edges.filter(e => e.to === courseId).map(prereq => {
-                      const prereqCourse = courseMap[prereq.from];
-                      if (!prereqCourse) return null;
-                      const isCompleted = completedCourses.has(prereq.from);
-                      return (
-                        <span key={prereq.from} style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: isCompleted ? "#dcfce7" : "#fee2e2", color: isCompleted ? "#166534" : "#991b1b" }}>
-                          {prereqCourse.name} {prereq.type === "concurrent" ? "(concurrent)" : ""}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {edges.filter(e => e.from === courseId).length > 0 && (
-                <div>
-                  <h4 style={{ fontSize: 13, fontWeight: 600, color: "#4b5563", marginBottom: 8 }}>Enables:</h4>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                    {edges.filter(e => e.from === courseId).map(enables => {
-                      const enabledCourse = courseMap[enables.to];
-                      if (!enabledCourse || !enabledCourse.programs.includes(view)) return null;
-                      return (
-                        <span key={enables.to} style={{ padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: "#e0f2fe", color: "#0c4a6e" }}>
-                          {enabledCourse.name}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })()}
 
         {/* Legend (Footer) */}
         <div className="legend" style={{ 
