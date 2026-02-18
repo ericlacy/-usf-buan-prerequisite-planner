@@ -181,7 +181,7 @@ const courses = [
 ];
 
 const edges = [
-  // BUS 204 → BUS 205, BUS 340, BUS 419-02
+  // BUS 204 → BUS 205, BUS 340, BUS 419-02, BUS 415
   { from: "BUS204", to: "BUS205", type: "concurrent" },
   { from: "BUS204", to: "BUS340", type: "required" },
   { from: "BUS204", to: "BUS41902", type: "required" },
@@ -194,24 +194,16 @@ const edges = [
   { from: "BUS312", to: "BUS316", type: "concurrent" },
   // BUS 316 → BUS 317
   { from: "BUS316", to: "BUS317", type: "concurrent" },
-  // BUS 410 prereqs: BUS 204, 340, 312, 315, 316
-  { from: "BUS204", to: "BUS410", type: "required" },
-  { from: "BUS340", to: "BUS410", type: "required" },
-  { from: "BUS312", to: "BUS410", type: "required" },
-  { from: "BUS315", to: "BUS410", type: "required" },
-  { from: "BUS316", to: "BUS410", type: "required" },
-  // BUS 411 prereqs: BUS 204, 340, 312, 315, 316
-  { from: "BUS204", to: "BUS411", type: "required" },
-  { from: "BUS340", to: "BUS411", type: "required" },
-  { from: "BUS312", to: "BUS411", type: "required" },
-  { from: "BUS315", to: "BUS411", type: "required" },
-  { from: "BUS316", to: "BUS411", type: "required" },
-  // BUS 419-01 prereqs: BUS 204, 340, 312, 315, 316
-  { from: "BUS204", to: "BUS41901", type: "required" },
-  { from: "BUS340", to: "BUS41901", type: "required" },
-  { from: "BUS312", to: "BUS41901", type: "required" },
-  { from: "BUS315", to: "BUS41901", type: "required" },
-  { from: "BUS316", to: "BUS41901", type: "required" },
+  // BUS 410: BUS 315 OR concurrent BUS 317; BUS 340 recommended
+  { from: "BUS315", to: "BUS410", type: "or-required", orGroup: "410-prereq" },
+  { from: "BUS317", to: "BUS410", type: "or-required", orGroup: "410-prereq" },
+  { from: "BUS340", to: "BUS410", type: "recommended" },
+  // BUS 411: BUS 315 OR concurrent BUS 317; BUS 340 recommended
+  { from: "BUS315", to: "BUS411", type: "or-required", orGroup: "411-prereq" },
+  { from: "BUS317", to: "BUS411", type: "or-required", orGroup: "411-prereq" },
+  { from: "BUS340", to: "BUS411", type: "recommended" },
+  // BUS 419-01: BUS 340 recommended
+  { from: "BUS340", to: "BUS41901", type: "recommended" },
 ];
 
 const majorRequired = ["BUS312", "BUS315"];
@@ -239,7 +231,22 @@ const catColors = {
 // Planning Logic Functions
 function checkPrerequisites(courseId, completedCourses, edges, view = "major") {
   const prereqs = edges.filter(e => e.to === courseId);
-  return prereqs.every(prereq => completedCourses.has(prereq.from));
+
+  // "recommended" edges never block availability
+  const blocking = prereqs.filter(e => e.type !== "recommended");
+
+  // Separate standard required/concurrent from or-required groups
+  const standard = blocking.filter(e => e.type !== "or-required");
+  const orEdges = blocking.filter(e => e.type === "or-required");
+
+  // All standard prereqs must be completed
+  if (!standard.every(e => completedCourses.has(e.from))) return false;
+
+  // Each distinct orGroup must have at least one member completed
+  const orGroups = [...new Set(orEdges.map(e => e.orGroup))];
+  return orGroups.every(group =>
+    orEdges.filter(e => e.orGroup === group).some(e => completedCourses.has(e.from))
+  );
 }
 
 function findAvailableCourses(completedCourses, currentSemester, classStanding, program, courses, edges) {
@@ -913,23 +920,61 @@ export default function PrereqPlanner() {
                   <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.6, margin: "10px 0 12px" }}>
                     {course.description}
                   </p>
-                  {edges.filter(e => e.to === courseId).length > 0 && (
-                    <div style={{ marginBottom: 10 }}>
-                      <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Prerequisites:</h4>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                        {edges.filter(e => e.to === courseId).map(prereq => {
-                          const prereqCourse = courseMap[prereq.from];
-                          if (!prereqCourse) return null;
-                          const isCompleted = completedCourses.has(prereq.from);
-                          return (
-                            <span key={prereq.from} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: isCompleted ? "#dcfce7" : "#fee2e2", color: isCompleted ? "#166534" : "#991b1b" }}>
-                              {prereqCourse.name} {prereq.type === "concurrent" ? "(concurrent)" : ""}
-                            </span>
-                          );
-                        })}
+                  {edges.filter(e => e.to === courseId).length > 0 && (() => {
+                    const inEdges = edges.filter(e => e.to === courseId);
+                    const required = inEdges.filter(e => e.type === "required" || e.type === "concurrent");
+                    const orGroups = [...new Set(inEdges.filter(e => e.type === "or-required").map(e => e.orGroup))];
+                    const recommended = inEdges.filter(e => e.type === "recommended");
+                    return (
+                      <div style={{ marginBottom: 10 }}>
+                        {(required.length > 0 || orGroups.length > 0) && (
+                          <>
+                            <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Prerequisites:</h4>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 6 }}>
+                              {required.map(prereq => {
+                                const c = courseMap[prereq.from];
+                                if (!c) return null;
+                                const done = completedCourses.has(prereq.from);
+                                return (
+                                  <span key={prereq.from} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: done ? "#dcfce7" : "#fee2e2", color: done ? "#166534" : "#991b1b" }}>
+                                    {c.name}{prereq.type === "concurrent" ? " (concurrent)" : ""}
+                                  </span>
+                                );
+                              })}
+                              {orGroups.map(group => {
+                                const groupEdges = inEdges.filter(e => e.orGroup === group);
+                                const anyDone = groupEdges.some(e => completedCourses.has(e.from));
+                                return (
+                                  <span key={group} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: anyDone ? "#ede9fe" : "#f3e8ff", color: anyDone ? "#5b21b6" : "#7c3aed", border: "1px solid #c4b5fd" }}>
+                                    {groupEdges.map((e, i) => (
+                                      <span key={e.from}>{i > 0 && <em style={{ color: "#7c3aed" }}> or </em>}{courseMap[e.from]?.name}{e.type === "concurrent" ? " (concurrent)" : ""}</span>
+                                    ))}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </>
+                        )}
+                        {recommended.length > 0 && (
+                          <>
+                            <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Recommended:</h4>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                              {recommended.map(prereq => {
+                                const c = courseMap[prereq.from];
+                                if (!c) return null;
+                                const done = completedCourses.has(prereq.from);
+                                return (
+                                  <span key={prereq.from} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: done ? "#f0fdf4" : "#f8fafc", color: done ? "#166534" : "#64748b", border: "1px solid #cbd5e1" }}>
+                                    {c.name}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </>
+                        )}
                       </div>
-                    </div>
-                  )}
+                    );
+                  })()}
                   {edges.filter(e => e.from === courseId).length > 0 && (
                     <div>
                       <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Enables:</h4>
@@ -958,6 +1003,12 @@ export default function PrereqPlanner() {
             <defs>
               <marker id="ar" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
                 <polygon points="0 0,7 2.5,0 5" fill="#3b82f6" />
+              </marker>
+              <marker id="ar-or" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                <polygon points="0 0,7 2.5,0 5" fill="#8b5cf6" />
+              </marker>
+              <marker id="ar-rec" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                <polygon points="0 0,7 2.5,0 5" fill="#94a3b8" />
               </marker>
               <filter id="sh" x="-4%" y="-4%" width="108%" height="116%">
                 <feDropShadow dx="0" dy="1" stdDeviation="2" floodOpacity="0.08" />
@@ -998,15 +1049,22 @@ export default function PrereqPlanner() {
               const toCourse = courseMap[edge.to];
               if (!fromCourse || !toCourse) return null;
               if (!fromCourse.programs.includes(view) || !toCourse.programs.includes(view)) return null;
-              
+
               const isActive = selected === edge.from || selected === edge.to;
               const opacity = selected ? (isActive ? 1 : 0.15) : 0.6;
-              
+
+              const isRecommended = edge.type === "recommended";
+              const isOr = edge.type === "or-required";
+              const stroke = isRecommended ? "#94a3b8" : isOr ? "#8b5cf6" : "#3b82f6";
+              const marker = isRecommended ? "url(#ar-rec)" : isOr ? "url(#ar-or)" : "url(#ar)";
+              const dashArray = isRecommended ? "5,4" : undefined;
+
               return (
-                <path key={edge.from + "-" + edge.to} 
-                  d={buildPath(fromCourse, toCourse)} 
-                  stroke="#3b82f6" strokeWidth="2" fill="none" 
-                  markerEnd="url(#ar)" opacity={opacity}
+                <path key={edge.from + "-" + edge.to + "-" + edge.type}
+                  d={buildPath(fromCourse, toCourse)}
+                  stroke={stroke} strokeWidth="2" fill="none"
+                  strokeDasharray={dashArray}
+                  markerEnd={marker} opacity={opacity}
                   style={{ transition: "opacity 0.2s" }} />
               );
             })}
@@ -1127,6 +1185,24 @@ export default function PrereqPlanner() {
           
           <span style={{ width: 1, height: 14, background: "#d1d5db", margin: "0 8px" }} />
           
+          <span style={{ width: 1, height: 14, background: "#d1d5db", margin: "0 8px" }} />
+
+          {/* Arrow type indicators */}
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <svg width="24" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#3b82f6" strokeWidth="2" markerEnd="url(#ar)" /><polygon points="18,2 24,5 18,8" fill="#3b82f6" /></svg>
+            <span style={{ fontSize: 11, color: "#475569" }}>Required</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <svg width="24" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#8b5cf6" strokeWidth="2" markerEnd="url(#ar-or)" /><polygon points="18,2 24,5 18,8" fill="#8b5cf6" /></svg>
+            <span style={{ fontSize: 11, color: "#475569" }}>Required (OR)</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <svg width="24" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4,3" /><polygon points="18,2 24,5 18,8" fill="#94a3b8" /></svg>
+            <span style={{ fontSize: 11, color: "#475569" }}>Recommended</span>
+          </div>
+
+          <span style={{ width: 1, height: 14, background: "#d1d5db", margin: "0 8px" }} />
+
           {/* Warning triangle indicator */}
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <span style={{ fontSize: 12, color: "#dc2626" }}>⚠</span>
