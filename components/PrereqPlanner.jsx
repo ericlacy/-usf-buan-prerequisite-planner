@@ -871,8 +871,8 @@ export default function PrereqPlanner() {
             )}
 
             {/* Course Details Panel */}
-            {selected && courseMap[selected] && (() => {
-              const courseId = selected;
+            {(selected || hovered) && courseMap[selected || hovered] && (() => {
+              const courseId = selected || hovered;
               const course = courseMap[courseId];
               return (
                 <div style={{ marginTop: 16, background: "#f8fafc", borderRadius: 8, padding: "16px", border: "1px solid #e2e8f0" }}>
@@ -895,7 +895,7 @@ export default function PrereqPlanner() {
                         )}
                       </div>
                     </div>
-                    {selected === courseId && (
+                    {selected && (
                       <button onClick={() => setSelected(null)} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "#6b7280", padding: 4 }}>
                         ✕
                       </button>
@@ -979,28 +979,6 @@ export default function PrereqPlanner() {
               );
             })()}
           </div>
-
-        {/* Hover Description Strip */}
-        {hovered && courseMap[hovered] && (
-          <div style={{
-            background: "#1e293b",
-            color: "#f1f5f9",
-            borderRadius: 8,
-            padding: "10px 16px",
-            marginBottom: 8,
-            fontSize: 12,
-            lineHeight: 1.6,
-            display: "flex",
-            alignItems: "flex-start",
-            gap: 10,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-          }}>
-            <span style={{ fontWeight: 700, color: "#FDBB30", whiteSpace: "nowrap" }}>
-              {courseMap[hovered].name}
-            </span>
-            <span style={{ opacity: 0.85 }}>{courseMap[hovered].description}</span>
-          </div>
-        )}
 
         {/* Course Map */}
         <div className="course-map" style={{ overflowX: "auto", border: "1px solid #e2e8f0", borderRadius: 12, background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
