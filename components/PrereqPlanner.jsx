@@ -95,7 +95,7 @@ const courses = [
     label: "Societal Impact of Tech",
     units: 2,
     cat: "elective",
-    year: 2,
+    year: 4,
     col: 3,
     programs: ["major", "minor"],
     sem: "Fall & Spring",
