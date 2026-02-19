@@ -375,10 +375,10 @@ export default function PrereqPlanner() {
   const [completedCourses, setCompletedCourses] = useState(new Set());
   const [currentSemester, setCurrentSemester] = useState("Fall");
   const [classStanding, setClassStanding] = useState("Junior");
-  const [showPlanner, setShowPlanner] = useState(true);
   
   // Warning system state
   const [warningMessage, setWarningMessage] = useState(null);
+  const [hovered, setHovered] = useState(null);
 
   // PNG image generation function
   const generateImage = async () => {
@@ -572,49 +572,15 @@ export default function PrereqPlanner() {
         {/* USF Branded Header */}
         <div style={{ background: "#00543C", borderBottom: "3px solid #FDBB30", borderRadius: "12px 12px 0 0", padding: "24px 28px 20px", marginBottom: 0 }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: "#FDBB30", margin: "0 0 4px", letterSpacing: "-0.3px" }}>
-            Business Analytics Course Prerequisite Planner
+            Business Analytics Course Planner
           </h1>
           <p style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", margin: 0, fontWeight: 400 }}>
-            University of San Francisco · McLaren School of Management
+            McLaren School of Management | University of San Francisco
           </p>
         </div>
 
         {/* Controls Bar */}
-        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 8, background: "#f8fafc", border: "1px solid #e2e8f0", borderTop: "none", padding: "10px 16px", marginBottom: 12 }}>
-          <button 
-            className="save-button"
-            onClick={generateImage}
-            style={{ 
-              padding: "7px 14px", 
-              border: "1px solid #FDBB30", 
-              borderRadius: 6, 
-              background: "#FDBB30",
-              color: "#0f172a",
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: 600,
-              display: "flex",
-              alignItems: "center",
-              gap: 6
-            }}
-          >
-            ⬇ Save Image
-          </button>
-          <button 
-            onClick={() => setShowPlanner(!showPlanner)}
-            style={{ 
-              padding: "7px 14px", 
-              border: "1px solid #d1d5db", 
-              borderRadius: 6, 
-              background: showPlanner ? "#00543C" : "#fff",
-              color: showPlanner ? "#fff" : "#374151",
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: 500
-            }}
-          >
-            {showPlanner ? "Hide Planner" : "Show Planner"}
-          </button>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", border: "1px solid #e2e8f0", borderTop: "none", padding: "10px 16px", marginBottom: 12 }}>
           <div style={{ display: "flex", gap: 4, background: "#f1f5f9", borderRadius: 8, padding: 3 }}>
             {[{ k: "major", l: "Major (52u)" }, { k: "minor", l: "Minor (20u)" }].map(v => (
               <button 
@@ -637,6 +603,25 @@ export default function PrereqPlanner() {
               </button>
             ))}
           </div>
+          <button 
+            className="save-button"
+            onClick={generateImage}
+            style={{ 
+              padding: "7px 14px", 
+              border: "1px solid #FDBB30", 
+              borderRadius: 6, 
+              background: "#FDBB30",
+              color: "#0f172a",
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              gap: 6
+            }}
+          >
+            ⬇ Save Image
+          </button>
         </div>
 
         {/* Warning Display */}
@@ -674,8 +659,7 @@ export default function PrereqPlanner() {
         )}
 
         {/* Planning Controls */}
-        {showPlanner && (
-          <div className="planning-controls" style={{ 
+        <div className="planning-controls" style={{ 
             background: "#fff", 
             borderRadius: 12, 
             padding: "16px", 
@@ -995,6 +979,27 @@ export default function PrereqPlanner() {
               );
             })()}
           </div>
+
+        {/* Hover Description Strip */}
+        {hovered && courseMap[hovered] && (
+          <div style={{
+            background: "#1e293b",
+            color: "#f1f5f9",
+            borderRadius: 8,
+            padding: "10px 16px",
+            marginBottom: 8,
+            fontSize: 12,
+            lineHeight: 1.6,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 10,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+          }}>
+            <span style={{ fontWeight: 700, color: "#FDBB30", whiteSpace: "nowrap" }}>
+              {courseMap[hovered].name}
+            </span>
+            <span style={{ opacity: 0.85 }}>{courseMap[hovered].description}</span>
+          </div>
         )}
 
         {/* Course Map */}
@@ -1080,7 +1085,10 @@ export default function PrereqPlanner() {
               const dim = selected && selected !== course.id && !edges.some(e => (e.from === selected && e.to === course.id) || (e.from === course.id && e.to === selected));
 
               return (
-                <g key={course.id} className="course-node" style={{ cursor: "pointer", transition: "opacity 0.2s" }} opacity={dim ? 0.18 : 1}>
+                <g key={course.id} className="course-node" style={{ cursor: "pointer", transition: "opacity 0.2s" }} opacity={dim ? 0.18 : 1}
+                onMouseEnter={() => setHovered(course.id)}
+                onMouseLeave={() => setHovered(null)}
+              >
                   <rect 
                     x={pos.x} y={pos.y} width={NODE_W} height={NODE_H} rx={8} 
                     fill={col.bg} stroke={col.border} strokeWidth={isA ? 2 : 1} 
