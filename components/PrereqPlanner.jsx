@@ -122,7 +122,7 @@ const courses = [
     label: "AI for Business",
     units: 2,
     cat: "elective",
-    year: 4,
+    year: 5,
     col: 0,
     programs: ["major", "minor"],
     sem: "Spring",
@@ -135,7 +135,7 @@ const courses = [
     units: 4,
     cat: "elective",
     year: 4,
-    col: 1,
+    col: 0,
     programs: ["major", "minor"],
     sem: "Fall & Spring",
     description: "Hands-on exploration of advanced business analytics tools applied to real-world community projects. Uses data cleaning, visualization, exploratory analysis, machine learning, and AI to tackle community-based challenges, with ethical considerations throughout."
@@ -146,8 +146,8 @@ const courses = [
     label: "BA Immersion",
     units: 2,
     cat: "elective",
-    year: 4,
-    col: 2,
+    year: 5,
+    col: 1,
     programs: ["major", "minor"],
     sem: "Spring",
     description: "Case studies, guest lectures, site visits, and projects with real-world data provide experiences in creating real business value. Analytical frameworks enable decision-making across industry domains. Students develop solutions for ambiguous and complex business problems."
@@ -159,7 +159,7 @@ const courses = [
     units: 2,
     cat: "elective",
     year: 4,
-    col: 3,
+    col: 1,
     programs: ["major", "minor"],
     sem: "Fall & Spring",
     enrollLimit: true,
@@ -171,10 +171,10 @@ const courses = [
     label: "Business Impact Studio",
     units: 2,
     cat: "elective",
-    year: 4,
-    col: 4,
+    year: 5,
+    col: 2,
     programs: ["major", "minor"],
-    sem: "Fall & Spring",
+    sem: "Spring",
     enrollLimit: true,
     description: "Work directly with real organizations on high-stakes business challenges. Meet with client executives, diagnose problems, and deliver usable solutions. Provides portfolio-ready work, references, and consulting experience."
   },
@@ -355,7 +355,7 @@ function calculateUnits(completedCourses, courses, view) {
   }
 }
 
-const yearLabels = [["Sophomore", "Fall"], ["Sophomore", "Spring"], ["Junior", "Fall"], ["Junior", "Spring"], ["Senior", ""]];
+const yearLabels = [["Sophomore", "Fall"], ["Sophomore", "Spring"], ["Junior", "Fall"], ["Junior", "Spring"], ["Senior", "Fall"], ["Senior", "Spring"]];
 const NODE_W = 148, NODE_H = 72, COL_GAP = 166, ROW_GAP = 108, PAD_LEFT = 160, PAD_TOP = 60;
 
 function getPos(c) { return { x: PAD_LEFT + c.col * COL_GAP, y: PAD_TOP + c.year * ROW_GAP }; }
