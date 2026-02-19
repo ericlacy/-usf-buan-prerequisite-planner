@@ -380,6 +380,14 @@ export default function PrereqPlanner() {
   const [warningMessage, setWarningMessage] = useState(null);
   const [hovered, setHovered] = useState(null);
 
+  // Mobile breakpoint detection
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth <= 640);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 640);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // PNG image generation function
   const generateImage = async () => {
     try {
@@ -717,7 +725,7 @@ export default function PrereqPlanner() {
                   </div>
                 </div>
               </div>
-              <div style={{ marginLeft: "auto" }}>
+              <div style={{ marginLeft: isMobile ? 0 : "auto", width: isMobile ? "100%" : "auto" }}>
                 <div style={{ fontSize: 12, color: "#64748b" }}>
                   <strong>{completedCourses.size}</strong> courses completed • <strong>{availableCourses.length}</strong> available this semester
                 </div>
@@ -727,7 +735,7 @@ export default function PrereqPlanner() {
             {/* Unit Progress Tracking */}
             <div className="unit-progress" style={{ 
               display: "grid", 
-              gridTemplateColumns: "1fr 1fr 1fr 1fr", 
+              gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr", 
               gap: 16, 
               padding: "16px", 
               background: "#f9fafb", 
@@ -873,7 +881,7 @@ export default function PrereqPlanner() {
           </div>
 
         {/* Course Details Panel — fixed height prevents layout shift / hover jitter */}
-        <div style={{ height: 130, marginBottom: 8, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", position: "relative", overflow: "hidden" }}>
+        <div style={{ height: isMobile ? 170 : 130, marginBottom: 8, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, padding: "14px 18px", overflow: "auto" }}>
             {(selected || hovered) && courseMap[selected || hovered] ? (() => {
               const courseId = selected || hovered;
@@ -908,11 +916,18 @@ export default function PrereqPlanner() {
               );
             })() : (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "#9ca3af", fontSize: 13 }}>
-                Hover or click a course to see details
+                {isMobile ? "Tap" : "Hover or click"} a course to see details
               </div>
             )}
           </div>
         </div>
+
+        {/* Mobile scroll hint */}
+        {isMobile && (
+          <div style={{ textAlign: "center", fontSize: 11, color: "#94a3b8", padding: "4px 0 6px", letterSpacing: "0.01em" }}>
+            ← Scroll to explore map →
+          </div>
+        )}
 
         {/* Course Map */}
         <div className="course-map" style={{ overflowX: "auto", border: "1px solid #e2e8f0", borderRadius: 12, background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
