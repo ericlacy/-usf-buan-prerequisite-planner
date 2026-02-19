@@ -870,115 +870,49 @@ export default function PrereqPlanner() {
               </div>
             )}
 
-            {/* Course Details Panel */}
-            {(selected || hovered) && courseMap[selected || hovered] && (() => {
+          </div>
+
+        {/* Course Details Panel — fixed height prevents layout shift / hover jitter */}
+        <div style={{ height: 170, marginBottom: 14, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 0, padding: "14px 18px", overflow: "auto" }}>
+            {(selected || hovered) && courseMap[selected || hovered] ? (() => {
               const courseId = selected || hovered;
-              const course = courseMap[courseId];
+              const c = courseMap[courseId];
+              const prereqs = edges.filter(e => e.to === courseId);
+              const required = prereqs.filter(e => e.type === "required" || e.type === "concurrent");
+              const orGroups = [...new Set(prereqs.filter(e => e.type === "or-required").map(e => e.orGroup))];
+              const recommended = prereqs.filter(e => e.type === "recommended");
+              const unlocks = edges.filter(e => e.from === courseId && courseMap[e.to]?.programs.includes(view));
               return (
-                <div style={{ marginTop: 16, background: "#f8fafc", borderRadius: 8, padding: "16px", border: "1px solid #e2e8f0" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-                    <div>
-                      <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0f172a", margin: "0 0 4px" }}>
-                        {course.name} — {course.label}
-                      </h3>
-                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                        <span style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "#3b82f6", color: "#fff" }}>
-                          {course.units} units
-                        </span>
-                        {course.sem && (
-                          <span style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: semesterColors[course.sem], color: "#fff" }}>
-                            {course.sem}
-                          </span>
-                        )}
-                        {course.enrollLimit && (
-                          <span style={{ fontSize: 12, color: "#dc2626" }}>⚠ Enrollment Limited</span>
-                        )}
-                      </div>
-                    </div>
-                    {selected && (
-                      <button onClick={() => setSelected(null)} style={{ background: "transparent", border: "none", fontSize: 18, cursor: "pointer", color: "#6b7280", padding: 4 }}>
-                        ✕
-                      </button>
-                    )}
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>{c.name}</span>
+                    <span style={{ fontSize: 13, color: "#64748b" }}>— {c.label}</span>
+                    <span style={{ padding: "2px 7px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "#3b82f6", color: "#fff" }}>{c.units}u</span>
+                    {c.sem && <span style={{ padding: "2px 7px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: semesterColors[c.sem], color: "#fff" }}>{c.sem}</span>}
+                    {c.enrollLimit && <span style={{ fontSize: 11, color: "#dc2626" }}>⚠ Enrollment Limited</span>}
+                    {selected && <button onClick={() => setSelected(null)} style={{ marginLeft: "auto", background: "transparent", border: "none", fontSize: 16, cursor: "pointer", color: "#6b7280", padding: "0 4px" }}>✕</button>}
                   </div>
-                  <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.6, margin: "10px 0 12px" }}>
-                    {course.description}
-                  </p>
-                  {edges.filter(e => e.to === courseId).length > 0 && (() => {
-                    const inEdges = edges.filter(e => e.to === courseId);
-                    const required = inEdges.filter(e => e.type === "required" || e.type === "concurrent");
-                    const orGroups = [...new Set(inEdges.filter(e => e.type === "or-required").map(e => e.orGroup))];
-                    const recommended = inEdges.filter(e => e.type === "recommended");
-                    return (
-                      <div style={{ marginBottom: 10 }}>
-                        {(required.length > 0 || orGroups.length > 0) && (
-                          <>
-                            <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Prerequisites:</h4>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 6 }}>
-                              {required.map(prereq => {
-                                const c = courseMap[prereq.from];
-                                if (!c) return null;
-                                const done = completedCourses.has(prereq.from);
-                                return (
-                                  <span key={prereq.from} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: done ? "#dcfce7" : "#fee2e2", color: done ? "#166534" : "#991b1b" }}>
-                                    {c.name}{prereq.type === "concurrent" ? " (concurrent)" : ""}
-                                  </span>
-                                );
-                              })}
-                              {orGroups.map(group => {
-                                const groupEdges = inEdges.filter(e => e.orGroup === group);
-                                const anyDone = groupEdges.some(e => completedCourses.has(e.from));
-                                return (
-                                  <span key={group} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: anyDone ? "#ede9fe" : "#f3e8ff", color: anyDone ? "#5b21b6" : "#7c3aed", border: "1px solid #c4b5fd" }}>
-                                    {groupEdges.map((e, i) => (
-                                      <span key={e.from}>{i > 0 && <em style={{ color: "#7c3aed" }}> or </em>}{courseMap[e.from]?.name}{e.type === "concurrent" ? " (concurrent)" : ""}</span>
-                                    ))}
-                                  </span>
-                                );
-                              })}
-                            </div>
-                          </>
-                        )}
-                        {recommended.length > 0 && (
-                          <>
-                            <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Recommended:</h4>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                              {recommended.map(prereq => {
-                                const c = courseMap[prereq.from];
-                                if (!c) return null;
-                                const done = completedCourses.has(prereq.from);
-                                return (
-                                  <span key={prereq.from} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: done ? "#f0fdf4" : "#f8fafc", color: done ? "#166534" : "#64748b", border: "1px solid #cbd5e1" }}>
-                                    {c.name}
-                                  </span>
-                                );
-                              })}
-                            </div>
-                          </>
-                        )}
+                  <p style={{ fontSize: 12, color: "#475569", lineHeight: 1.5, margin: "0 0 8px", fontStyle: "italic" }}>{c.description}</p>
+                  <div style={{ display: "flex", gap: 20, fontSize: 12, color: "#374151", flexWrap: "wrap" }}>
+                    {(required.length > 0 || orGroups.length > 0) && (
+                      <div><strong>Prerequisites:</strong>{" "}
+                        {required.map(e => courseMap[e.from]?.name).filter(Boolean).join(", ")}
+                        {orGroups.map(g => { const ge = prereqs.filter(e => e.orGroup === g); return " (" + ge.map(e => courseMap[e.from]?.name).filter(Boolean).join(" or ") + ")"; }).join("")}
                       </div>
-                    );
-                  })()}
-                  {edges.filter(e => e.from === courseId).length > 0 && (
-                    <div>
-                      <h4 style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginBottom: 6 }}>Enables:</h4>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                        {edges.filter(e => e.from === courseId).map(enables => {
-                          const enabledCourse = courseMap[enables.to];
-                          if (!enabledCourse || !enabledCourse.programs.includes(view)) return null;
-                          return (
-                            <span key={enables.to} style={{ padding: "3px 8px", borderRadius: 4, fontSize: 11, fontWeight: 500, background: "#e0f2fe", color: "#0c4a6e" }}>
-                              {enabledCourse.name}
-                            </span>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
+                    )}
+                    {recommended.length > 0 && <div><strong>Recommended:</strong>{" "}{recommended.map(e => courseMap[e.from]?.name).filter(Boolean).join(", ")}</div>}
+                    {unlocks.length > 0 && <div><strong>Enables:</strong>{" "}{unlocks.map(e => courseMap[e.to]?.name).filter(Boolean).join(", ")}</div>}
+                  </div>
                 </div>
               );
-            })()}
+            })() : (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "#9ca3af", fontSize: 13 }}>
+                Hover or click a course to see details
+              </div>
+            )}
           </div>
+        </div>
 
         {/* Course Map */}
         <div className="course-map" style={{ overflowX: "auto", border: "1px solid #e2e8f0", borderRadius: 12, background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
@@ -1064,7 +998,7 @@ export default function PrereqPlanner() {
 
               return (
                 <g key={course.id} className="course-node" style={{ cursor: "pointer", transition: "opacity 0.2s" }} opacity={dim ? 0.18 : 1}
-                onMouseEnter={() => setHovered(course.id)}
+                onMouseEnter={() => { if (!selected) setHovered(course.id); }}
                 onMouseLeave={() => setHovered(null)}
               >
                   <rect 
@@ -1072,7 +1006,8 @@ export default function PrereqPlanner() {
                     fill={col.bg} stroke={col.border} strokeWidth={isA ? 2 : 1} 
                     filter={!dim ? "url(#sh)" : undefined}
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent unselect
+                      e.stopPropagation();
+                      setHovered(null);
                       if (selected === course.id) {
                         setSelected(null);
                       } else {
