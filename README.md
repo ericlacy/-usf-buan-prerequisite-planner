@@ -1,4 +1,4 @@
-# USF Business Analytics Course Prerequisite Planner
+# USF Business Analytics Course Planner
 
 A comprehensive, interactive course planning tool for University of San Francisco Business Analytics students. Plan your major or minor with visual prerequisite mapping, progress tracking, and requirement validation.
 
