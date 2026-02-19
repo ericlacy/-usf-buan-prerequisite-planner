@@ -567,10 +567,10 @@ export default function PrereqPlanner() {
   const svgH = PAD_TOP + (maxRow + 1) * ROW_GAP + NODE_H + 20;
 
   return (
-    <div className="planner-container" style={{ fontFamily: "'Inter', -apple-system, system-ui, sans-serif", background: "#fafbfc", minHeight: "100vh", padding: 20 }}>
+    <div className="planner-container" style={{ fontFamily: "'Inter', -apple-system, system-ui, sans-serif", background: "#fafbfc", minHeight: "100vh", padding: 12 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         {/* USF Branded Header */}
-        <div style={{ background: "#00543C", borderBottom: "3px solid #FDBB30", borderRadius: "12px 12px 0 0", padding: "24px 28px 20px", marginBottom: 0 }}>
+        <div style={{ background: "#00543C", borderBottom: "3px solid #FDBB30", borderRadius: "12px 12px 0 0", padding: "14px 20px 12px", marginBottom: 0 }}>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: "#FDBB30", margin: "0 0 4px", letterSpacing: "-0.3px" }}>
             Business Analytics Course Planner
           </h1>
@@ -580,7 +580,7 @@ export default function PrereqPlanner() {
         </div>
 
         {/* Controls Bar */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", border: "1px solid #e2e8f0", borderTop: "none", padding: "10px 16px", marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", border: "1px solid #e2e8f0", borderTop: "none", padding: "10px 16px", marginBottom: 8 }}>
           <div style={{ display: "flex", gap: 4, background: "#f1f5f9", borderRadius: 8, padding: 3 }}>
             {[{ k: "major", l: "Major (52u)" }, { k: "minor", l: "Minor (20u)" }].map(v => (
               <button 
@@ -631,7 +631,7 @@ export default function PrereqPlanner() {
             border: "1px solid #fecaca", 
             borderRadius: 8, 
             padding: "12px 16px", 
-            marginBottom: 16,
+            marginBottom: 8,
             display: "flex",
             alignItems: "center",
             gap: 8,
@@ -663,7 +663,7 @@ export default function PrereqPlanner() {
             background: "#fff", 
             borderRadius: 12, 
             padding: "16px", 
-            marginBottom: 16, 
+            marginBottom: 8, 
             boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
             border: "1px solid #e2e8f0"
           }}>
@@ -873,7 +873,7 @@ export default function PrereqPlanner() {
           </div>
 
         {/* Course Details Panel — fixed height prevents layout shift / hover jitter */}
-        <div style={{ height: 170, marginBottom: 14, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", position: "relative", overflow: "hidden" }}>
+        <div style={{ height: 170, marginBottom: 8, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, padding: "14px 18px", overflow: "auto" }}>
             {(selected || hovered) && courseMap[selected || hovered] ? (() => {
               const courseId = selected || hovered;
@@ -1062,70 +1062,69 @@ export default function PrereqPlanner() {
         {/* Legend (Footer) */}
         <div className="legend" style={{ 
           display: "flex", 
-          gap: 16, 
-          marginTop: 16,
-          padding: "16px", 
+          gap: 12, 
+          marginTop: 8,
+          padding: "10px 14px", 
           background: "#f8f9fa", 
           borderRadius: 12, 
           flexWrap: "wrap", 
           alignItems: "center",
           borderTop: "1px solid #e2e8f0"
         }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: "#374151", marginRight: 8 }}>
-            Legend:
-          </div>
-          
-          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>Legend:</div>
+
+          <span style={{ width: 1, height: 14, background: "#d1d5db" }} />
+
+          {/* Course status */}
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <div style={{ width: 12, height: 12, borderRadius: 3, background: catColors.completed.bg, border: "2px solid " + catColors.completed.border }} />
             <span style={{ fontSize: 11, color: "#475569", fontWeight: 500 }}>Completed</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <div style={{ width: 12, height: 12, borderRadius: 3, background: catColors.available.bg, border: "2px solid " + catColors.available.border }} />
             <span style={{ fontSize: 11, color: "#475569", fontWeight: 500 }}>Available Now</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <div style={{ width: 12, height: 12, borderRadius: 3, background: catColors.blocked.bg, border: "2px solid " + catColors.blocked.border }} />
             <span style={{ fontSize: 11, color: "#475569", fontWeight: 500 }}>Prerequisites Needed</span>
           </div>
-          
-          <span style={{ width: 1, height: 14, background: "#d1d5db", margin: "0 8px" }} />
-          
+
+          <span style={{ width: 1, height: 14, background: "#d1d5db" }} />
+
           {/* Semester indicators */}
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <div style={{ width: 12, height: 10, borderRadius: 3, background: semesterColors.Fall }} />
             <span style={{ fontSize: 11, color: "#475569" }}>Fall</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <div style={{ width: 12, height: 10, borderRadius: 3, background: semesterColors.Spring }} />
             <span style={{ fontSize: 11, color: "#475569" }}>Spring</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <div style={{ width: 12, height: 10, borderRadius: 3, background: semesterColors["Fall & Spring"] }} />
             <span style={{ fontSize: 11, color: "#475569" }}>Fall & Spring</span>
           </div>
-          
-          <span style={{ width: 1, height: 14, background: "#d1d5db", margin: "0 8px" }} />
-          
-          <span style={{ width: 1, height: 14, background: "#d1d5db", margin: "0 8px" }} />
+
+          <span style={{ width: 1, height: 14, background: "#d1d5db" }} />
 
           {/* Arrow type indicators */}
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <svg width="24" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#3b82f6" strokeWidth="2" markerEnd="url(#ar)" /><polygon points="18,2 24,5 18,8" fill="#3b82f6" /></svg>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <svg width="24" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#3b82f6" strokeWidth="2" /><polygon points="18,2 24,5 18,8" fill="#3b82f6" /></svg>
             <span style={{ fontSize: 11, color: "#475569" }}>Required</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <svg width="24" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#8b5cf6" strokeWidth="2" markerEnd="url(#ar-or)" /><polygon points="18,2 24,5 18,8" fill="#8b5cf6" /></svg>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <svg width="24" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#8b5cf6" strokeWidth="2" /><polygon points="18,2 24,5 18,8" fill="#8b5cf6" /></svg>
             <span style={{ fontSize: 11, color: "#475569" }}>Required (OR)</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <svg width="24" height="10"><line x1="0" y1="5" x2="18" y2="5" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4,3" /><polygon points="18,2 24,5 18,8" fill="#94a3b8" /></svg>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <svg width="28" height="10"><line x1="0" y1="5" x2="20" y2="5" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4,3" /><polygon points="20,2 26,5 20,8" fill="#94a3b8" /></svg>
             <span style={{ fontSize: 11, color: "#475569" }}>Recommended</span>
           </div>
 
-          <span style={{ width: 1, height: 14, background: "#d1d5db", margin: "0 8px" }} />
+          <span style={{ width: 1, height: 14, background: "#d1d5db" }} />
 
-          {/* Warning triangle indicator */}
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          {/* Warning indicator */}
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ fontSize: 12, color: "#dc2626" }}>⚠</span>
             <span style={{ fontSize: 11, color: "#475569" }}>Enrollment Limited</span>
           </div>
