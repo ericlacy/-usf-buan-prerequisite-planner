@@ -873,7 +873,7 @@ export default function PrereqPlanner() {
           </div>
 
         {/* Course Details Panel — fixed height prevents layout shift / hover jitter */}
-        <div style={{ height: 170, marginBottom: 8, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", position: "relative", overflow: "hidden" }}>
+        <div style={{ height: 130, marginBottom: 8, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, padding: "14px 18px", overflow: "auto" }}>
             {(selected || hovered) && courseMap[selected || hovered] ? (() => {
               const courseId = selected || hovered;
