@@ -590,7 +590,7 @@ export default function PrereqPlanner() {
         {/* Controls Bar */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", border: "1px solid #e2e8f0", borderTop: "none", padding: "10px 16px", marginBottom: 8 }}>
           <div style={{ display: "flex", gap: 4, background: "#f1f5f9", borderRadius: 8, padding: 3 }}>
-            {[{ k: "major", l: "Major (52u)" }, { k: "minor", l: "Minor (20u)" }].map(v => (
+            {[{ k: "major", l: "Major (20u)" }, { k: "minor", l: "Minor (20u)" }].map(v => (
               <button 
                 key={v.k} 
                 onClick={() => { setView(v.k); setSelected(null); }}
