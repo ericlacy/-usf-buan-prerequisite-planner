@@ -53,8 +53,8 @@ const courses = [
   },
   // Row 2 — Junior Fall
   {
-    id: "BUS312",
-    name: "BUS 312",
+    id: "BUAN312",
+    name: "BUAN 312",
     label: "Data Wrangling",
     units: 4,
     cat: "minor-req",
@@ -66,8 +66,8 @@ const courses = [
     description: "Apply analytical tools to collect and explore digital data from various digital platforms (databases, mobile apps, social media, etc.). Introduces digital analytics techniques to provide managerial insights and improve business decision-making."
   },
   {
-    id: "BUS315",
-    name: "BUS 315",
+    id: "BUAN315",
+    name: "BUAN 315",
     label: "Data Mining for Business",
     units: 4,
     cat: "required",
@@ -78,8 +78,8 @@ const courses = [
     description: "Data mining is about investigating relationships in data. Introduces skills, techniques, and focus needed by today's managers to prepare and analyze data to identify patterns, anomalies, sentiments, insights, risks, and opportunities in a competitive business environment."
   },
   {
-    id: "BUS340",
-    name: "BUS 340",
+    id: "BUAN340",
+    name: "BUAN 340",
     label: "Data Visualization",
     units: 2,
     cat: "elective",
@@ -90,8 +90,8 @@ const courses = [
     description: "Introduction to data visualization principles and techniques for improving comprehension, communication, and decision making. Learn how combining data sources with advanced analytics can power new business opportunities."
   },
   {
-    id: "BUS41902",
-    name: "BUS 419-02",
+    id: "BUAN49802",
+    name: "BUAN 498-02",
     label: "Societal Impact of Tech",
     units: 2,
     cat: "elective",
@@ -104,8 +104,8 @@ const courses = [
   },
   // Row 3 — Junior Spring
   {
-    id: "BUS316",
-    name: "BUS 316",
+    id: "BUAN316",
+    name: "BUAN 316",
     label: "ML for Business",
     units: 2,
     cat: "elective",
@@ -117,8 +117,8 @@ const courses = [
   },
   // Row 4 — Senior
   {
-    id: "BUS317",
-    name: "BUS 317",
+    id: "BUAN317",
+    name: "BUAN 317",
     label: "AI for Business",
     units: 2,
     cat: "elective",
@@ -129,8 +129,8 @@ const courses = [
     description: "Equips students with advanced AI techniques reshaping industries today. Covers key AI concepts including machine learning, deep learning, and natural language processing, with practical applications in business through case studies and hands-on projects."
   },
   {
-    id: "BUS410",
-    name: "BUS 410",
+    id: "BUAN410",
+    name: "BUAN 410",
     label: "Analytics for Good",
     units: 4,
     cat: "elective",
@@ -141,8 +141,8 @@ const courses = [
     description: "Hands-on exploration of advanced business analytics tools applied to real-world community projects. Uses data cleaning, visualization, exploratory analysis, machine learning, and AI to tackle community-based challenges, with ethical considerations throughout."
   },
   {
-    id: "BUS411",
-    name: "BUS 411",
+    id: "BUAN411",
+    name: "BUAN 411",
     label: "BA Immersion",
     units: 2,
     cat: "elective",
@@ -153,8 +153,8 @@ const courses = [
     description: "Case studies, guest lectures, site visits, and projects with real-world data provide experiences in creating real business value. Analytical frameworks enable decision-making across industry domains. Students develop solutions for ambiguous and complex business problems."
   },
   {
-    id: "BUS415",
-    name: "BUS 415",
+    id: "BUAN415",
+    name: "BUAN 415",
     label: "Supply Chain Mgmt",
     units: 2,
     cat: "elective",
@@ -166,8 +166,8 @@ const courses = [
     description: "Explores supply chain management from sourcing raw materials to end customers. Real-world examples and latest challenges in the field, equipping students to understand current business landscapes and anticipate future trends."
   },
   {
-    id: "BUS41901",
-    name: "BUS 419-01",
+    id: "BUAN49801",
+    name: "BUAN 498-01",
     label: "Business Impact Studio",
     units: 2,
     cat: "elective",
@@ -181,33 +181,33 @@ const courses = [
 ];
 
 const edges = [
-  // BUS 204 → BUS 205, BUS 340, BUS 419-02, BUS 415
+  // BUS 204 → BUS 205, BUAN 340, BUAN 498-02, BUAN 415
   { from: "BUS204", to: "BUS205", type: "concurrent" },
-  { from: "BUS204", to: "BUS340", type: "required" },
-  { from: "BUS204", to: "BUS41902", type: "required" },
-  { from: "BUS204", to: "BUS415", type: "required" },
-  // BUS 205 → BUS 309, BUS 312
+  { from: "BUS204", to: "BUAN340", type: "required" },
+  { from: "BUS204", to: "BUAN49802", type: "required" },
+  { from: "BUS204", to: "BUAN415", type: "required" },
+  // BUS 205 → BUS 309, BUAN 312
   { from: "BUS205", to: "BUS309", type: "required" },
-  { from: "BUS205", to: "BUS312", type: "required" },
-  // BUS 312 → BUS 315, BUS 316
-  { from: "BUS312", to: "BUS315", type: "concurrent" },
-  { from: "BUS312", to: "BUS316", type: "concurrent" },
-  // BUS 316 → BUS 317
-  { from: "BUS316", to: "BUS317", type: "concurrent" },
-  // BUS 410: BUS 315 OR concurrent BUS 317; BUS 340 recommended
-  { from: "BUS315", to: "BUS410", type: "or-required", orGroup: "410-prereq" },
-  { from: "BUS317", to: "BUS410", type: "or-required", orGroup: "410-prereq" },
-  { from: "BUS340", to: "BUS410", type: "recommended" },
-  // BUS 411: BUS 315 OR concurrent BUS 317; BUS 340 recommended
-  { from: "BUS315", to: "BUS411", type: "or-required", orGroup: "411-prereq" },
-  { from: "BUS317", to: "BUS411", type: "or-required", orGroup: "411-prereq" },
-  { from: "BUS340", to: "BUS411", type: "recommended" },
-  // BUS 419-01: BUS 340 recommended
-  { from: "BUS340", to: "BUS41901", type: "recommended" },
+  { from: "BUS205", to: "BUAN312", type: "required" },
+  // BUAN 312 → BUAN 315, BUAN 316
+  { from: "BUAN312", to: "BUAN315", type: "concurrent" },
+  { from: "BUAN312", to: "BUAN316", type: "concurrent" },
+  // BUAN 316 → BUAN 317
+  { from: "BUAN316", to: "BUAN317", type: "concurrent" },
+  // BUAN 410: BUAN 315 OR concurrent BUAN 317; BUAN 340 recommended
+  { from: "BUAN315", to: "BUAN410", type: "or-required", orGroup: "410-prereq" },
+  { from: "BUAN317", to: "BUAN410", type: "or-required", orGroup: "410-prereq" },
+  { from: "BUAN340", to: "BUAN410", type: "recommended" },
+  // BUAN 411: BUAN 315 OR concurrent BUAN 317; BUAN 340 recommended
+  { from: "BUAN315", to: "BUAN411", type: "or-required", orGroup: "411-prereq" },
+  { from: "BUAN317", to: "BUAN411", type: "or-required", orGroup: "411-prereq" },
+  { from: "BUAN340", to: "BUAN411", type: "recommended" },
+  // BUAN 498-01: BUAN 340 recommended
+  { from: "BUAN340", to: "BUAN49801", type: "recommended" },
 ];
 
-const majorRequired = ["BUS312", "BUS315"];
-const minorRequired = ["BUS204", "BUS205", "BUS312"];
+const majorRequired = ["BUAN312", "BUAN315"];
+const minorRequired = ["BUS204", "BUS205", "BUAN312"];
 
 // Semester colors - Fixed to be different
 const semesterColors = {
@@ -308,8 +308,8 @@ function calculateUnits(completedCourses, courses, view) {
     .filter(Boolean);
   
   if (view === "major") {
-    // Major core: BUS 312 + BUS 315 = 8u
-    const majorCoreCourses = ["BUS312", "BUS315"];
+    // Major core: BUAN 312 + BUAN 315 = 8u
+    const majorCoreCourses = ["BUAN312", "BUAN315"];
     // Excluded from major count: BUS 204, BUS 205 (prereqs only)
     const majorExcluded = ["BUS204", "BUS205"];
 
@@ -329,8 +329,8 @@ function calculateUnits(completedCourses, courses, view) {
   } else {
     // Minor calculations: 10 units BUAN + 10 units electives = 20 total
     
-    // Minor BUAN Core: BUS 204 + BUS 205 + BUS 312 = 10 units
-    const minorBuanCourses = ["BUS204", "BUS205", "BUS312"];
+    // Minor BUAN Core: BUS 204 + BUS 205 + BUAN 312 = 10 units
+    const minorBuanCourses = ["BUS204", "BUS205", "BUAN312"];
     const buanCoreUnits = completedCourseObjects
       .filter(course => minorBuanCourses.includes(course.id))
       .reduce((total, course) => total + course.units, 0);
