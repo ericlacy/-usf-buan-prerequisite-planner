@@ -289,7 +289,6 @@ const edges = [
   { from: "RHET", to: "BUS305", type: "required" },
   { from: "BUS201", to: "BUS202", type: "required" },
   { from: "BUS204", to: "BUS202", type: "concurrent" },
-  { from: "BUS204", to: "BUS205", type: "concurrent" },
   { from: "BUS201", to: "BUS305", type: "required" },
   { from: "ECON110", to: "BUS305", type: "required" },
   { from: "BUS205", to: "BUS308", type: "required" },

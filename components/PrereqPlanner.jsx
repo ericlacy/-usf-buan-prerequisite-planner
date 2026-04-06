@@ -181,8 +181,7 @@ const courses = [
 ];
 
 const edges = [
-  // BUS 204 → BUS 205, BUAN 340, BUAN 498-02, BUAN 415
-  { from: "BUS204", to: "BUS205", type: "concurrent" },
+  // BUS 204 → BUAN 340, BUAN 498-02, BUAN 415
   { from: "BUS204", to: "BUAN340", type: "required" },
   { from: "BUS204", to: "BUAN49802", type: "required" },
   { from: "BUS204", to: "BUAN415", type: "required" },
