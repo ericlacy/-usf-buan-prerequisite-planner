@@ -2,8 +2,8 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 
 const courses = [
   { 
-    id: "RHET", 
-    name: "RHET 110", 
+    id: "RHET",
+    name: "RHET 120",
     label: "Rhetoric & Comp", 
     units: 4, 
     cat: "foundation", 

@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 
 // Course data and configuration — BUAN courses only
-// Business Core courses (RHET 110, BUS 100/201/202/301/302/304/305/403, ECON 110) are
+// Business Core courses (RHET 120, BUS 100/201/202/301/302/304/305/403, ECON 110) are
 // tracked separately via your Degree Evaluation in Banner/myUSF.
 const courses = [
   // Row 0 — Foundation
@@ -14,7 +14,7 @@ const courses = [
     year: 0,
     col: 0,
     programs: ["major", "minor"],
-    description: "Prerequisite: RHET 110 (university core requirement). Utilizes spreadsheets for data analysis and modeling to inform business decisions. Covers regression models, forecasting, decision analysis, and optimizing resource allocation for strategic decision-making."
+    description: "Prerequisite: RHET 120 (Core A2 requirement). Utilizes spreadsheets for data analysis and modeling to inform business decisions. Covers regression models, forecasting, decision analysis, and optimizing resource allocation for strategic decision-making."
   },
   // Row 1 — Sophomore Spring
   {
@@ -38,13 +38,13 @@ const courses = [
     col: 1,
     programs: ["minor"],
     note: "Minor elective only",
-    description: "Prerequisite: RHET 110 (university core requirement). Development and implementation of internet-based business applications including e-commerce, digital marketing, and web-based business models."
+    description: "Prerequisite: RHET 120 (Core A2 requirement). Development and implementation of internet-based business applications including e-commerce, digital marketing, and web-based business models."
   },
   {
     id: "BUS309",
     name: "BUS 309",
     label: "Managing Processes & Projects",
-    units: 4,
+    units: 2,
     cat: "elective",
     year: 1,
     col: 2,

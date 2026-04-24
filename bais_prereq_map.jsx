@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 
 const courses = [
-  { id: "RHET", name: "RHET 110", label: "Rhetoric & Comp", units: 4, cat: "foundation", year: 0, col: 0, programs: ["major", "minor"] },
+  { id: "RHET", name: "RHET 120", label: "Rhetoric & Comp", units: 4, cat: "foundation", year: 0, col: 0, programs: ["major", "minor"] },
   { id: "ECON110", name: "ECON 110", label: "Intro Economics", units: 4, cat: "foundation", year: 0, col: 1, programs: ["major"] },
   { id: "BUS100", name: "BUS 100", label: "Launch into Business", units: 2, cat: "core", year: 0, col: 2, programs: ["major"] },
   { id: "BUS201", name: "BUS 201", label: "Financial Accounting", units: 4, cat: "core", year: 1, col: 0, programs: ["major"] },
